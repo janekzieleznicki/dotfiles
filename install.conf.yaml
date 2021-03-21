@@ -19,7 +19,7 @@
         force: false
     ~/.config/nvim/init.vim:
         path: init.vim
-        create: false
+        create: true
         force: false
 
 - shell:
