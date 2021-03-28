@@ -63,6 +63,7 @@ Plug 'huawenyu/neogdb.vim'
 Plug 'ekalinin/dockerfile.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'vimlab/split-term.vim'
+Plug 'Chiel92/vim-autoformat'
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -139,6 +140,11 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
 
+" terraform
+Plug 'hashivim/vim-terraform'
+
+" Vagrant
+Plug 'hashivim/vim-vagrant'
 
 "*****************************************************************************
 "*****************************************************************************
