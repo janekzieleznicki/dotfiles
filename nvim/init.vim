@@ -126,6 +126,14 @@ Plug 'ryanoasis/vim-devicons'
 " Distraction free programming
 Plug 'junegunn/goyo.vim'
 
+" Rust tools
+Plug 'neovim/nvim-lspconfig'
+Plug 'simrat39/rust-tools.nvim'
+
+" Debugging
+Plug 'nvim-lua/plenary.nvim'
+Plug 'mfussenegger/nvim-dap'
+
 " ============================================================================
 "  Conquer of completion extensions extensions
 "  https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
@@ -393,3 +401,7 @@ endif
 if filereadable(expand("~/.config/nvim/custom.vim"))
   source ~/.config/nvim/custom.vim
 endif
+
+lua << EOS
+  require('rust-tools').setup({})
+EOS
