@@ -14,12 +14,11 @@
     ~/.zshrc:
         path: zshrc
         create: false
-    ~/.config/nvim/init.vim:
-        path: init.vim
+    ~/.config/nvim:
+        path: nvim
         create: true
     ~/.antigen:
         path: antigen
         create: true
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-
