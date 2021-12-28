@@ -7,8 +7,6 @@ antigen use oh-my-zsh
 antigen bundle git
 # Rust
 antigen bundle rust 
-antigen bundle rustup 
-antigen bundle cargo
 # Docker
 antigen bundle docker
 antigen bundle docker-compose
@@ -23,6 +21,8 @@ antigen bundle command-not-found
 antigen bundle zsh-users/zsh-autosuggestions
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
+
+antigen bundle chrissicool/zsh-256color
 
 antigen theme agnoster
 
