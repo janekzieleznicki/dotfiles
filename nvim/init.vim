@@ -134,6 +134,8 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'mfussenegger/nvim-dap'
 
+Plug 'lewis6991/gitsigns.nvim'
+
 " ============================================================================
 "  Conquer of completion extensions extensions
 "  https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
@@ -404,4 +406,5 @@ endif
 
 lua << EOS
   require('rust-tools').setup({})
+  require('gitsigns').setup()
 EOS
