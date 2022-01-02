@@ -31,8 +31,10 @@ antigen apply
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[ -f $HOME/.local/bin/balenaEtcher-1.5.116-x64.AppImage ] && alias balenaEtcher=$HOME/.local/bin/balenaEtcher-1.5.116-x64.AppImage
+[ -f ${HOME}/.local/bin/balenaEtcher.AppImage ] && alias balenaEtcher="${HOME}/.local/bin/balenaEtcher.AppImage"
 
-[ -f $HOME/.local/bin/nvim.appimage ] && alias nvim=$HOME/.local/bin/nvim.appimage
+[ -f ${HOME}/.local/bin/nvim.appimage ] && alias nvim="${HOME}/.local/bin/nvim.appimage"
 
-export EDITOR='/usr/bin/nvim'
+[ -x $(command -v exa) ] && alias ls=exa
+
+export EDITOR='nvim'
