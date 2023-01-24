@@ -1,410 +1,221 @@
-" ============================================================================
-" Vim-plug initialization
-" ============================================================================
-let vim_plug_just_installed = 0
-let vim_plug_path = expand('$HOME/.config/nvim/autoload/plug.vim')
-if !filereadable(vim_plug_path)
-  echo "Installing Vim-plug..."
-  silent !mkdir -p $HOME/.config/nvim/autoload
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  let vim_plug_just_installed = 1
-endif
+""" Optixal's Neovim Init.vim
 
-" manually load vim-plug the first time
-if vim_plug_just_installed
-  :execute 'source '.fnameescape(vim_plug_path)
-endif
+""" Vim-Plug
+call plug#begin()
 
-" ============================================================================
-" Active plugins
-" ============================================================================
-call plug#begin('~/.config/nvim/plugged')
-
-" solarized colorscheme
-Plug 'lifepillar/vim-solarized8'
-
-" Ayu colorscheme
-Plug 'ayu-theme/ayu-vim'
-
-" NeoSolarized colorscheme
-Plug 'overcache/NeoSolarized'
-
-" rainbow brackets
-Plug 'luochen1990/rainbow'
-
-" Neoformat (universal formatting tool)
-Plug 'sbdchd/neoformat'
-
-" Cmake highlighting
-Plug 'pboettch/vim-cmake-syntax'
-
-" Javascript syntax highlighting
-Plug 'yuezk/vim-js'
-
-" Typescript syntax highlighting
-Plug 'HerringtonDarkholme/yats.vim'
-
-" Vim wiki
-Plug 'vimwiki/vimwiki'
-
-" quick commenter
-Plug 'preservim/nerdcommenter'
-
-" vim-smoothie
-Plug 'psliwka/vim-smoothie'
-
-" Conquer of Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-" Override configs by directory
-Plug 'arielrossanigo/dir-configs-override.vim'
-
-" Better file browser
-Plug 'scrooloose/nerdtree'
-
-" Class/module browser
-Plug 'majutsushi/tagbar'
-
-" Search results counter
-Plug 'vim-scripts/IndexedSearch'
-
-" Startify, fancy start screen for vim
-Plug 'mhinz/vim-startify'
-
-" Vim latex live preview
-Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-
-" Integrated Floating terminal
-Plug 'voldikss/vim-floaterm'
-
-" Airline status line
-Plug 'vim-airline/vim-airline'
-
-" Themes for Airline
-Plug 'vim-airline/vim-airline-themes'
-
-" Code and files fuzzy finder
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-
-" Pending tasks list
-Plug 'fisadev/FixedTaskList.vim'
-
-" Completion from other opened files
-Plug 'Shougo/context_filetype.vim'
-
-" Automatically close parenthesis, etc
-Plug 'Townk/vim-autoclose'
-
-" Indent text object
-Plug 'michaeljsmith/vim-indent-object'
-
-" Indentation based movements
-Plug 'jeetsukumaran/vim-indentwise'
-
-" Better language packs
-Plug 'sheerun/vim-polyglot'
-
-" Paint css colors with the real color
-Plug 'lilydjwg/colorizer'
-
-" Generate html in a simple way
-Plug 'mattn/emmet-vim'
-
-" Git integration
-Plug 'tpope/vim-fugitive'
-
-" Git/mercurial/others diff icons on the side of the file lines
-Plug 'mhinz/vim-signify'
-
-" Linters
-"Plug 'neomake/neomake'
-
-" Nice icons: Need to install patched font for this to work
-Plug 'ryanoasis/vim-devicons'
-
-" Distraction free programming
-Plug 'junegunn/goyo.vim'
-
-" Rust tools
+" Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
-Plug 'simrat39/rust-tools.nvim'
-
-" Debugging
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'kyazdani42/nvim-tree.lua'
 
-Plug 'lewis6991/gitsigns.nvim'
+" Functionalities
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'mhinz/vim-signify'
+Plug 'jiangmiao/auto-pairs'
+Plug 'alvan/vim-closetag'
+Plug 'tpope/vim-abolish'
+Plug 'junegunn/vim-easy-align'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Yggdroot/indentLine'
+Plug 'chrisbra/Colorizer'
+Plug 'KabbAmine/vCoolor.vim'
+Plug 'dkarter/bullets.vim'
+Plug 'wellle/context.vim'
+Plug 'antoinemadec/FixCursorHold.nvim'
 
-" ============================================================================
-"  Conquer of completion extensions extensions
-"  https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
-" ============================================================================
-let g:coc_global_extensions = [
-      \ 'coc-tsserver',
-      \ 'coc-prettier',
-      \ 'coc-eslint',
-      \ 'coc-json',
-      \ 'coc-sh',
-      \ 'coc-fish',
-      \ 'coc-vimlsp',
-      \ 'coc-pyright',
-      \ 'coc-rust-analyzer',
-      \ 'coc-cmake',
-      \ 'coc-clangd',
-      \ 'coc-texlab',
-      \ 'coc-markdownlint',
-      \ ]
+" Functionalities - Python
+Plug 'psf/black', { 'branch': 'stable' }
+Plug 'heavenshell/vim-pydocstring'
 
-" Tell vim-plug we finished declaring plugins, so it can load them
+" Aesthetics - Colorschemes
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'zaki/zazen'
+Plug 'yuttie/hydrangea-vim'
+
+" Aesthetics - Others
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/vim-journal'
+
 call plug#end()
 
-" =============================================================================
-" Automate the plugin install process if this is the first time nvim is ran
-" =============================================================================
-if vim_plug_just_installed
-  echo ""
-  echo "Installing all plugins for"$USER
-  echo ""
-  :PlugInstall
-endif
+""" Main Configurations
+filetype plugin indent on
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set incsearch ignorecase smartcase hlsearch
+set wildmode=longest,list,full wildmenu
+set ruler laststatus=2 showcmd showmode
+set list listchars=trail:»,tab:»-
+set fillchars+=vert:\ 
+set wrap breakindent
+set encoding=utf-8
+set textwidth=0
+set hidden
+set number
+set title
 
-" =============================================================================
-" Custom commands and autocommands
-" =============================================================================
-" Kill all open buffers accepts for active one
-command! KillAllButOne execute '%bdelete|edit #|normal `"'
-command! VerticalAndSwitch :vs | :wincmd l
-command! HorizontalAndSwitch :split | :wincmd j
+""" Filetype-Specific Configurations
 
-" Make neovim see .js, .ts files as jsx, tsx files: FIX for coc-tsserver
-autocmd FileType javascript set filetype=javascriptreact
-autocmd FileType typescript set filetype=typescriptreact
+" HTML, XML, Jinja
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango inoremap {{ {{  }}<left><left><left>
+autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
+autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
 
-" Set expand witdth for web based languages
-autocmd FileType html setlocal ts=2 sw=2 expandtab
-autocmd FileType css setlocal ts=2 sw=2 expandtab
-autocmd FileType scss setlocal ts=2 sw=2 expandtab
-autocmd FileType javascript setlocal ts=2 sw=2 expandtab
-autocmd FileType javascriptreact setlocal ts=2 sw=2 expandtab
-autocmd FileType typescript setlocal ts=2 sw=2 expandtab
-autocmd FileType typescriptreact setlocal ts=2 sw=2 expandtab
-autocmd FileType json setlocal ts=2 sw=2 expandtab
-autocmd FileType vue setlocal ts=2 sw=2 expandtab
+" Markdown and Journal
+autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
-" Set expand width for Low level languages
-autocmd FileType c setlocal ts=2 sw=2 expandtab
-autocmd FileType h setlocal ts=2 sw=2 expandtab
-autocmd FileType cpp setlocal ts=2 sw=2 expandtab
-autocmd FileType hpp setlocal ts=2 sw=2 expandtab
-autocmd FileType rust setlocal ts=4 sw=4 expandtab
+""" Coloring
 
-" Set expand width for scripting languages
-autocmd FileType sh setlocal ts=2 sw=2 expandtab
-autocmd FileType zsh setlocal ts=2 sw=2 expandtab
-autocmd FileType fish setlocal ts=2 sw=2 expandtab
-autocmd FileType vim setlocal ts=2 sw=2 expandtab
-autocmd FileType bash setlocal ts=2 sw=2 expandtab
-autocmd FileType lisp setlocal ts=2 sw=2 expandtab
-autocmd FileType pl setlocal ts=2 sw=2 expandtab
-autocmd FileType py setlocal ts=4 sw=4 expandtab
+" Functions and autocmds to run whenever changing colorschemes
+function! TransparentBackground()
+    highlight Normal guibg=NONE ctermbg=NONE
+    highlight LineNr guibg=NONE ctermbg=NONE
+    set fillchars+=vert:\│
+    highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+    highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+endfunction
 
-" Set expand width to 2 for markdown
-autocmd FileType md setlocal ts=2 sw=2 expandtab
-autocmd FileType markdown setlocal ts=2 sw=2 expandtab
+" Use these colors for Pmenu, CmpPmenusBorder and TelescopeBorder when using dracula colorscheme
+function! DraculaTweaks()
+    " Pmenu colors when not using bordered windows
+    highlight Pmenu guibg=#363948
+    highlight PmenuSbar guibg=#363948
+    " Completion/documentation Pmenu border color when using bordered windows
+    highlight link CmpPmenuBorder NonText
+    " Telescope borders
+    highlight link TelescopeBorder Constant
+endfunction
 
-" Run xrdb whenever Xdefaults or Xresources are updated.
-autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
-
-" Recompile suckless programs. only for files that are config.h
-autocmd BufWritePost config.h,config.def.h !sudo make install; make clean
-
-" Comile any latex document into pdf form
-autocmd BufWritePost answers.tex !pdflatex answers.tex
-
-" Compile markdown notes to pdf
-autocmd BufWritePost notes.md !pandoc -s -o notes.pdf notes.md
-
-" =============================================================================
-" Code folding:
-" https://www.linux.com/training-tutorials/vim-tips-folding-fun/#:~:text=Open%20it%20in%20Vim%2C%20and,and%20the%20next%20two%20lines.
-" =============================================================================
-augroup weblang_folding
-  au!
-  au FileType javascript setlocal foldmethod=marker
-  au FileType typescript setlocal foldmethod=marker
-  au FileType html setlocal foldmethod=marker
-  au FileType css setlocal foldmethod=marker
-  au FileType scss setlocal foldmethod=marker
+augroup MyColors
+    autocmd!
+    autocmd ColorScheme dracula call DraculaTweaks()
+    "autocmd ColorScheme * call TransparentBackground() " uncomment if you are using a translucent terminal and you want nvim to use that
 augroup END
 
-augroup scriptlang_folding
-  au!
-  au FileType sh setlocal foldmethod=marker
-  au FileType bash setlocal foldmethod=marker
-  au FileType fish setlocal foldmethod=marker
-  au FileType python setlocal foldmethod=marker
-  au FileType perl setlocal foldmethod=marker
-augroup END
+color dracula
+set termguicolors
 
-augroup systemslang_folding
-  au!
-  au FileType cpp setlocal foldmethod=marker
-  au FileType hpp setlocal foldmethod=marker
-  au FileType c setlocal foldmethod=marker
-  au FileType h setlocal foldmethod=marker
-  au FileType rust setlocal foldmethod=marker
-augroup END
+""" Core plugin configuration (vim)
 
-" =============================================================================
-" General Neovim settings and key mappings
-" =============================================================================
-" remap default leader key to comma
-let mapleader = ";"
-" Reload nvim config
-nnoremap <leader>vr :source $MYVIMRC<CR>
+" Treesitter
+augroup DraculaTreesitterSourcingFix
+    autocmd!
+    autocmd ColorScheme dracula runtime after/plugin/dracula.vim
+    syntax on
+augroup end
 
-" Open init.vim in current buffer
-nnoremap <leader>vc :e $MYVIMRC<CR>
+" nvim-cmp
+set completeopt=menu,menuone,noselect
 
-" Open custom.vim in current buffer
-nnoremap <leader>vx :e $XDG_CONFIG_HOME/nvim/custom.vim<CR>
+" signify
+let g:signify_sign_add = '│'
+let g:signify_sign_delete = '│'
+let g:signify_sign_change = '│'
+hi DiffDelete guifg=#ff5555 guibg=none
 
-" Change Ctrl N mapping to Ctrl Space "
-inoremap <C-space> <C-n>
+" indentLine
+let g:indentLine_char = '▏'
+let g:indentLine_defaultGroup = 'NonText'
+" Disable indentLine from concealing json and markdown syntax (e.g. ```)
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
-" write and quit, no save
-nnoremap <leader>wq :wq<CR>
+" FixCursorHold for better performance
+let g:cursorhold_updatetime = 100
 
-" quit, no save
-nnoremap <leader>q :q<CR>
+" context.vim
+let g:context_nvim_no_redraw = 1
 
-" quit, abandon
-nnoremap <leader>qq :q!<CR>
+" Neovim :Terminal
+tmap <Esc> <C-\><C-n>
+tmap <C-w> <Esc><C-w>
+"tmap <C-d> <Esc>:q<CR>
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
 
-" buffer delete, only to be used on tabs
-nnoremap <leader>bd :bdelete<CR>
+" Python
+let g:python3_host_prog = '~/.config/nvim/env/bin/python3'
+let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
 
-" write current buffer
-nnoremap <leader>w :w<CR>
+""" Core plugin configuration (lua)
+lua << EOF
+servers = {
+    'pyright',
+    --'tsserver', -- uncomment for typescript. See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md for other language servers
+}
+require('treesitter-config')
+require('nvim-cmp-config')
+require('lspconfig-config')
+require('telescope-config')
+require('lualine-config')
+require('nvim-tree-config')
+require('diagnostics')
+EOF
 
-" write all buffers
-nnoremap <leader>wa :wa<CR>
+""" Custom Functions
 
-" quit all
-nnoremap <leader>qa :qa<CR>
+" Trim Whitespaces
+function! TrimWhitespace()
+    let l:save = winsaveview()
+    %s/\\\@<!\s\+$//e
+    call winrestview(l:save)
+endfunction
 
-" Split horizontally
-nnoremap bb :HorizontalAndSwitch<CR>
+""" Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
-" Split vertically
-nnoremap vv :VerticalAndSwitch<CR>
+" Core
+let mapleader=","
+nmap <leader>q :NvimTreeFindFileToggle<CR>
+nmap \ <leader>q
+nmap <leader>r :so ~/.config/nvim/init.vim<CR>
+nmap <leader>t :call TrimWhitespace()<CR>
+xmap <leader>a gaip*
+nmap <leader>a gaip*
+nmap <leader>h :RainbowParentheses!!<CR>
+nmap <leader>j :set filetype=journal<CR>
+nmap <leader>k :ColorToggle<CR>
+nmap <leader>l :Limelight!!<CR>
+xmap <leader>l :Limelight!!<CR>
+nmap <silent> <leader><leader> :noh<CR>
+nmap <Tab> :bnext<CR>
+nmap <S-Tab> :bprevious<CR>
+nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
+nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
 
-" code folding
-nnoremap <leader>fo :foldopen<CR>
-nnoremap <leader>fc :foldclose<CR>
+" Python
+autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
+autocmd FileType python nmap <leader>p :Black<CR>
 
-" Remap keys to move between splits easier
-nmap <C-h> <C-w>h
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-nmap <C-l> <C-w>l
+" Solidity (requires: npm install --save-dev prettier prettier-plugin-solidity)
+autocmd Filetype solidity nmap <leader>p :0,$!npx prettier %<CR>
 
-"" Make vim scroll faster
-set ttyfast
-set mouse=a
-set lazyredraw
-" Set numbers
-set nu
-set nowrap
-set relativenumber
-set encoding=UTF-8
-" set tabline to not display full path
-set guitablabel=%t
+" Telescope mappings
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
+nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 
-" tabs and spaces handling
-set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-" remove ugly vertical lines on window division
-set fillchars+=vert:\
-
-" Global Copy to clipboard
-vnoremap  <leader>y  "+y
-nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>y  "+y
-nnoremap  <leader>yy "+yy
-
-" Global Paste from clipboard
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
-
-" autocompletion of files and commands behaves like shell
-" (complete only the common part, list the options that match)
-set wildmode=list:longest
-
-" save as sudo, must configure ask pass helper
-ca w!! w !sudo tee "%"
-
-" tab navigation mappings
-map tt :tabnew
-map <M-l> :tabn<CR>
-imap <M-l> <ESC>:tabn<CR>
-map <M-h> :tabp<CR>
-imap <M-h> <ESC>:tabp<CR>
-
-" when scrolling, keep cursor 3 lines away from screen border
-set scrolloff=3
-
-" clear search results
-nnoremap <silent> // :noh<CR>
-
-" clear empty spaces at the end of lines on save of python files
-autocmd BufWritePre *.py :%s/\s\+$//e
-
-" fix problems with uncommon shells (fish, xonsh) and plugins running commands
-set shell=$SHELL
-
-" Ability to add python breakpoints
-" (I use ipdb, but you can change it to whatever tool you use for debugging)
-au FileType python map <silent> <leader>b Oimport ipdb; ipdb.set_trace()<esc>
-
-" =============================================================================
-" Set colorscheme and Color rendering workarounds
-" =============================================================================
-if (has("nvim"))
-  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
-
-if (has("termguicolors"))
-  set termguicolors
-endif
-set background=dark
-syntax enable
-
-" use 256 colors when possible
-if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
-  let &t_Co = 256
-  set background=dark
-  colorscheme NeoSolarized
-  " let ayucolor="dark"
-  " colorscheme ayu
-else
-  colorscheme quantum
-endif
-
-" =============================================================================
-" Include custom configurations and plugin configurations
-" =============================================================================
-if filereadable(expand("~/.config/nvim/custom.vim"))
-  source ~/.config/nvim/custom.vim
-endif
-
-lua << EOS
-  require('rust-tools').setup({})
-  require('gitsigns').setup()
-EOS
