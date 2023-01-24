@@ -8,3 +8,7 @@
 [submodule "fzf"]
 	path = fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule "nvim"]
+	path = nvim
+  url = https://github.com/NvChad/NvChad
+  shallow = true
