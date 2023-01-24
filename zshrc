@@ -33,6 +33,8 @@ antigen apply
 
 [ -f ${HOME}/.local/bin/nvim.appimage ] && alias nvim="${HOME}/.local/bin/nvim.appimage"
 
-[ -x $(command -v exa) ] && alias ls=exa
+[ -f ${HOME}/.local/bin/lvim ] && alias lvim="${HOME}/.local/bin/lvim"
+
+[ ! -z "$(command -v exa)" ] && alias ls=exa
 
 export EDITOR='nvim'
