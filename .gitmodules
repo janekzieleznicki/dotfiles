@@ -11,4 +11,3 @@
 [submodule "nvim"]
 	path = nvim
 	url = https://github.com/NvChad/starter
-	branch = v2.0
