@@ -1,31 +1,27 @@
-source "$HOME/.antigen/antigen.zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Load the oh-my-zsh's library.
-antigen use oh-my-zsh
 
-# Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen bundle git
-# Docker
-antigen bundle docker
-antigen bundle docker-compose
+plugins=(
+  ansible
+  git
+  npm
+  dotenv
+  docker
+  rust
+  fzf
+  vagrant
+  terraform
+  dnf
+  pip
+  zoxide
+    zsh-autosuggestions
+)
 
-antigen bundle nmap
-antigen bundle pip
-antigen bundle dnf
-antigen bundle terraform
-antigen bundle vagrant
-antigen bundle zsh-users/zsh-completions
-antigen bundle command-not-found
-antigen bundle zsh-users/zsh-autosuggestions
-# Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
+ZSH_THEME="agnoster"
+zstyle ':omz:update' mode auto
 
-antigen bundle chrissicool/zsh-256color
-
-antigen theme agnoster
-
-# Tell Antigen that you're done.
-antigen apply
+source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
