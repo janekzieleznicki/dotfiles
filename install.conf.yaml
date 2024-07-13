@@ -15,10 +15,20 @@
         path: zshrc
         create: false
     ~/.config/nvim:
-        path: nvim
+        path: modules/nvchad
         create: true
-    ~/.antigen:
-        path: antigen
+    ~/.config/nvim/custom:
+        path: nvim-custom
+        create: true
+    ~/.oh-my-zsh:
+        path: modules/ohmyzsh
+        create: true
+    ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
+        path: modules/zsh-autosuggestions
+        create: true
+    ~/.fzf:
+        path: modules/fzf
         create: true
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - [~/.fzf/install --key-bindings --completion --update-rc, Installing fzf]

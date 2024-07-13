@@ -1,10 +1,18 @@
-[submodule "dotbot"]
-	path = dotbot
+[submodule "modules/dotbot"]
+	path = modules/dotbot
 	url = https://github.com/anishathalye/dotbot
-	ignore = dirty
-[submodule "antigen"]
-	path = antigen
-	url = https://github.com/zsh-users/antigen.git
-[submodule "fzf"]
-	path = fzf
+[submodule "modules/nvchad"]
+	path = modules/nvchad
+	url = https://github.com/NvChad/starter
+[submodule "modules/fzf"]
+	path = modules/fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule "modules/antigen"]
+	path = modules/antigen
+	url = https://github.com/zsh-users/antigen.git
+[submodule "modules/ohmyzsh"]
+	path = modules/ohmyzsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
+[submodule "modules/zsh-autosuggestions"]
+	path = modules/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
