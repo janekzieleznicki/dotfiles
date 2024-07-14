@@ -1,34 +1,34 @@
 - defaults:
-    link:
-      relink: true
-      force: true
-- clean: ['~']
+      link:
+          relink: true
+          force: true
+- clean: ["~"]
 
 - link:
-    ~/.tmux.conf:
-        path: tmux.conf
-        create: false
-    ~/.zshenv:
-        path: zshenv
-        create: false
-    ~/.zshrc:
-        path: zshrc
-        create: false
-    ~/.config/nvim:
-        path: modules/nvchad
-        create: true
-    ~/.config/nvim/lua/custom:
-        path: nvim-custom
-        create: true
-    ~/.oh-my-zsh:
-        path: modules/ohmyzsh
-        create: true
-    ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
-        path: modules/zsh-autosuggestions
-        create: true
-    ~/.fzf:
-        path: modules/fzf
-        create: true
+      ~/.tmux.conf:
+          path: tmux.conf
+          create: false
+      ~/.zshenv:
+          path: zshenv
+          create: false
+      ~/.zshrc:
+          path: zshrc
+          create: false
+      ~/.config/nvim:
+          path: modules/nvchad
+          create: true
+      ~/.config/nvim/lua/custom:
+          path: nvim-custom
+          create: true
+      ~/.oh-my-zsh:
+          path: modules/ohmyzsh
+          create: true
+      ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
+          path: modules/zsh-autosuggestions
+          create: true
+      ~/.fzf:
+          path: modules/fzf
+          create: true
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
-  - [~/.fzf/install --key-bindings --completion --update-rc, Installing fzf]
+      - [git submodule update --init --recursive, Installing submodules]
+      - [~/.fzf/install --key-bindings --completion --update-rc, Installing fzf]
