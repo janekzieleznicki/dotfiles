@@ -15,10 +15,7 @@
           path: zshrc
           create: false
       ~/.config/nvim:
-          path: modules/nvchad
-          create: true
-      ~/.config/nvim/lua/custom:
-          path: nvim-custom
+          path: nvim
           create: true
       ~/.oh-my-zsh:
           path: modules/ohmyzsh

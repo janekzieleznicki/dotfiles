@@ -1,9 +1,6 @@
 [submodule "modules/dotbot"]
 	path = modules/dotbot
 	url = https://github.com/anishathalye/dotbot
-[submodule "modules/nvchad"]
-	path = modules/nvchad
-	url = https://github.com/NvChad/starter
 [submodule "modules/fzf"]
 	path = modules/fzf
 	url = https://github.com/junegunn/fzf.git
