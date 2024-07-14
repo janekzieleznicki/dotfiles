@@ -17,7 +17,7 @@
     ~/.config/nvim:
         path: modules/nvchad
         create: true
-    ~/.config/nvim/custom:
+    ~/.config/nvim/lua/custom:
         path: nvim-custom
         create: true
     ~/.oh-my-zsh:
