@@ -38,3 +38,5 @@ export EDITOR='nvim'
 export PATH=${HOME}/.local/bin:$PATH
 
 [[ -e "${HOME}/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "${HOME}/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
+
+eval "$(zoxide init --cmd cd zsh)"
