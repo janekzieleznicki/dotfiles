@@ -5,6 +5,9 @@
 - clean: ["~"]
 
 - link:
+      ~/.config/alacritty/alacritty.toml:
+          path: alacritty.toml
+          create: false
       ~/.tmux.conf:
           path: tmux.conf
           create: false
