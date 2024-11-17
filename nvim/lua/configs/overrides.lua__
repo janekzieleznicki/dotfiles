@@ -1,0 +1,73 @@
+local M = {}
+
+
+M.lsp = {
+  -- empty table mean default setup on custom.config.lspconfig
+  -- rust-analyzer lsp configured before this on custom.plugins on simrat/rusttool config
+
+  htmx = {},
+  svelte = {},
+  astro = {},
+  vuels = {},
+  jsonls = {},
+  yamlls = {},
+  marksman = {},
+  sqlls = {},
+  solidity = {},
+  gdscript = {},
+  pylsp = {},
+  clangd = {},
+  cmake = {},
+  gopls = {},
+  denols = {},
+  nginx_language_server = {},
+  arduino_language_server= {},
+  docker_compose_language_service = {},
+  lua_ls = {},
+  cssls = {
+    filetypes = { "css", "scss", "less", "html"},
+  },
+  tsserver = {
+    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx"},
+  },
+  html = {
+      init_options = {
+      configurationSection = { "html", "css", "javascript" },
+      embeddedLanguages = {
+        css = true,
+        javascript = true
+      },
+      provideFormatter = true
+    }
+  },
+  tailwindcss = {
+    filetypes=
+    { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte","rust" },
+    init_options = {
+      userLanguages = {
+        rust = "html",
+      }
+    }
+  }
+}
+-- git support in nvimtree
+M.nvimtree = {
+
+  -- use icon in git status but doesnt hide ignore from file tree
+  git = {
+    enable = true,
+    ignore = false
+  },
+
+  renderer = {
+    highlight_git = true,
+    icons = {
+      show = {
+        git = true,
+      },
+    },
+  },
+}
+
+
+return M
