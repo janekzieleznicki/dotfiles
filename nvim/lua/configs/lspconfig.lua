@@ -25,7 +25,7 @@ local servers = {
   "docker_compose_language_service",
   "lua_ls",
   "cssls",
-  "tsserver",
+  "ts_ls",
   "html",
   "tailwindcss",
 }
@@ -40,7 +40,7 @@ for _, lsp in ipairs(servers) do
 end
 
 -- typescript
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
   on_attach = on_attach,
   on_init = on_init,
   capabilities = capabilities,
