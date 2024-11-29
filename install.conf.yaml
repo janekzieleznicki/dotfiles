@@ -14,6 +14,9 @@
       ~/.tmux/plugins/tpm:
           path: modules/tpm
           create: true
+      ~/.config/tmux/plugins/catppuccin/tmux:
+          path: modules/catppuccin/tmux
+          create: true
       ~/.zshenv:
           path: zshenv
           create: false

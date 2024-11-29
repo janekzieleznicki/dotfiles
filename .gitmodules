@@ -16,3 +16,6 @@
 [submodule "modules/tpm"]
 	path = modules/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "modules/catppuccin/tmux"]
+	path = modules/catppuccin/tmux
+	url = https://github.com/catppuccin/tmux.git
