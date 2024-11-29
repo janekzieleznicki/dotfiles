@@ -11,6 +11,9 @@
       ~/.tmux.conf:
           path: tmux.conf
           create: false
+      ~/.tmux/plugins/tpm:
+          path: modules/tpm
+          create: true
       ~/.zshenv:
           path: zshenv
           create: false
