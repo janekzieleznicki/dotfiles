@@ -121,7 +121,7 @@ lspconfig.tailwindcss.setup {
     "typescriptreact",
     "vue",
     "svelte",
-    "rust",
+    "templ",
   },
   init_options = {
     userLanguages = {
