@@ -4,9 +4,9 @@ local options = {
     css = { "prettier" },
     html = { "prettier" },
     rust = { "rustfmt" },
-    javascript = { { "prettierd", "prettier" } },
+    javascript = { "prettierd", "prettier" },
     go = { "goimports", "gofmt" },
-    ["nginx.conf"] = {"nginxfmt"},
+    ["nginx.conf"] = { "nginxfmt" },
     -- Use the "*" filetype to run formatters on all filetypes.
     ["*"] = { "codespell" },
   },
@@ -37,4 +37,3 @@ vim.api.nvim_create_user_command("FormatEnable", function()
 end, {
   desc = "Re-enable autoformat-on-save",
 })
-
