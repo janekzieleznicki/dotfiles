@@ -20,8 +20,6 @@ normal.family = "JetBrainsMono Nerd Font"
 
 size = 12
 
-[terminal]
-
-[shell]
+[terminal.shell]
 program = "/usr/bin/tmux"
 args = ["new","-A","-s","alacritty"]
