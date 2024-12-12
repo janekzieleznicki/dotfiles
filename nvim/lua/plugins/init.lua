@@ -164,10 +164,6 @@ return {
       "hrsh7th/cmp-copilot",
       "ray-x/cmp-treesitter",
       {
-        "Exafunction/codeium.nvim",
-        opts = {},
-      },
-      {
         "tzachar/cmp-tabnine",
         build = "./install.sh",
         config = function()

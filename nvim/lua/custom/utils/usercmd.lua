@@ -164,22 +164,6 @@ create_cmd("TUpdate", function()
   vim.cmd "TSUpdate"
 end, {})
 
--- Toggle Codeium
-g.codeium = false
-create_cmd("CodeiumToggle", function()
-  vim.notify("Codeium is " .. (g.codeium and "OFF" or "ON"), "info", {
-    title = "Codeium",
-    icon = "",
-    on_open = function()
-      g.codeium = not g.codeium
-      if g.codeium then
-        vim.cmd "CodeiumEnable"
-      else
-        vim.cmd "CodeiumDisable"
-      end
-    end,
-  })
-end, {})
 
 create_cmd("GitOpen", function()
   -- Current file
