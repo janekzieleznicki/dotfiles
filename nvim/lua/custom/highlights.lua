@@ -122,7 +122,6 @@ M.add = {
   CoverageUncovered = { fg = "red" },
 
   -- Cmp Highlights
-  CmpItemKindTabNine = { fg = "pink" },
   CmpItemKindCopilot = { fg = "cyan" },
 
   PackageInfoOutdatedVersion = { fg = "red" },
