@@ -66,7 +66,7 @@ pkgs = {
     "yamllint",
 
     --rust
-    "rust-analyzer",
+    -- "rust-analyzer",
     "taplo", --for toml lsp
 
     --solidity
