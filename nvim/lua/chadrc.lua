@@ -1,196 +1,150 @@
----@class ChadrcConfig
+-- https://github.com/NvChad/ui/blob/v2.5/lua/nvconfig.lua
+
+---@type ChadrcConfig
 local M = {}
-
-local core = require "custom.utils.core"
-
--- Path to overriding theme and highlights files
-local highlights = require "custom.highlights"
-M.ui = {
-  lsp_semantic_tokens = false,
-  statusline = core.statusline,
-  tabufline = core.tabufline,
-
-  cmp = {
-    icons = true,
-    lspkind_text = true,
-    format_colors = {
-      tailwind = true,
-      icon = "󱓻",
-    },
-    style = "default", -- default/flat_light/flat_dark/atom/atom_colored
-    border_color = "grey_fg", -- only applicable for "default" style, use color names from base30 variables
-    selected_item_bg = "colored", -- colored / simple
-  },
-
-  telescope = { style = "bordered" },
-
-  hl_override = highlights.override,
-  hl_add = highlights.add,
-}
-
-M.nvdash = core.nvdash
-
-
-M.lsp = { signature = false }
-
-M.mason = {
-pkgs = {
-    -- lua stuff
-    "lua-language-server",
-    "stylua",
-
-
-    -- web dev stuff
-    "css-lsp",
-    "html-lsp",
-    "htmx-lsp", --experimental new lsp
-    "typescript-language-server",
-    "svelte-language-server",
-    "astro-language-server",
-    "vetur-vls", --vue lsp
-    "tailwindcss-language-server",
-    "deno",
-    "prettier",
-    -- for djinja or django templating
-    "djlint",
-    "python-lsp-server",
-
-    --data/content general
-    "json-lsp",
-    "markdownlint",
-    "marksman",
-    "sqlls", --golang version of sqlls
-    "sqlfmt",
-    "yaml-language-server",
-    "yamlfmt",
-    "yamllint",
-
-    --rust
-    -- "rust-analyzer",
-    "taplo", --for toml lsp
-
-    --solidity
-    "solidity",
-
-    -- c/cpp stuff
-    "clangd",
-    "clang-format",
-    "cmake-language-server",
-
-    --go
-    "gopls",
-    "goimports",
-
-    --godot
-    "gdtoolkit",
-
-    --proxy or container
-    "docker-compose-language-service",
-    "dockerfile-language-server",
-    "nginx-language-server",
-
-    --arduino
-    "arduino-language-server",
-},
-}
+local aux = require "gale.chadrc_aux"
+local modules = aux.modules
+local themes_customs = aux.themes_customs
 
 M.base46 = {
+  transparency = true,
+  theme = "bearded-arc",
+  theme_toggle = { "bearded-arc", "bearded-arc" },
   integrations = {
     "blankline",
     "cmp",
-    "defaults",
+    "codeactionmenu",
+    "dap",
     "devicons",
-    "git",
+    "hop",
     "lsp",
     "markview",
     "mason",
-    "nvcheatsheet",
-    "nvimtree",
-    "statusline",
-    "syntax",
-    "tbline",
-    "telescope",
-    "whichkey",
-    "dap",
-    "hop",
-    "treesitter",
-    "rainbowdelimiters",
-    "diffview",
-    "todo",
-    "trouble",
+    "neogit",
     "notify",
+    "nvimtree",
+    "rainbowdelimiters",
+    "semantic_tokens",
+    "todo",
+    "whichkey",
+  },
+}
+
+M.base46.hl_override = {
+  DevIconMd = { fg = "#FFFFFF", bg = "NONE" },
+  FloatTitle = { link = "FloatBorder" },
+  CursorLine = { bg = "black2" },
+  CursorLineNr = { bold = true },
+  CmpBorder = { link = "FloatBorder" },
+  CmpDocBorder = { link = "FloatBorder" },
+  TelescopeBorder = { link = "FloatBorder" },
+  TelescopePromptBorder = { link = "FloatBorder" },
+  NeogitDiffContext = { bg = "#171B21" },
+  NeogitDiffContextCursor = { bg = "black2" },
+  NeogitDiffContextHighlight = { link = "NeogitDiffContext" },
+  TbBufOffModified = { fg = { "green", "black", 50 } },
+  FoldColumn = { link = "FloatBorder" },
+  Comment = { italic = true },
+  ["@comment"] = { link = "Comment" },
+  ["@keyword"] = { italic = true },
+  ["@markup.heading"] = { fg = "NONE", bg = "NONE" },
+}
+
+M.base46.hl_add = {
+  YankVisual = { bg = "lightbg" },
+  DevIconToml = { fg = "#9C4221", bg = "NONE" },
+  Border = { link = "FloatBorder" },
+  St_HarpoonInactive = { link = "StText" },
+  St_HarpoonActive = { link = "St_LspHints" },
+  St_GitBranch = { fg = "baby_pink", bg = M.base46.transparency and "NONE" or "statusline_bg" },
+  St_Oil = { fg = "grey_fg", bg = M.base46.transparency and "NONE" or "statusline_bg" },
+  GitSignsCurrentLineBlame = { link = "Comment" },
+  MarkviewLayer2 = { bg = "#171B21" },
+  MarkviewCode = { link = "MarkviewLayer2" },
+  HelpviewCode = { link = "MarkviewLayer2" },
+  HelpviewInlineCode = { link = "MarkviewInlineCode" },
+  HelpviewCodeLanguage = { link = "MarkviewCode" },
+  OilWinbar = { fg = "vibrant_green", bold = true },
+  CodeActionSignHl = { fg = "#F9E2AF" },
+  ["@number.luadoc"] = { fg = "Comment" },
+  ["@markup.quote.markdown"] = { bg = "NONE" },
+  ["@markup.raw.block.markdown"] = { link = "MarkviewLayer2" },
+}
+
+local theme_customs = themes_customs[M.base46.theme]
+M.base46 = theme_customs and vim.tbl_deep_extend("force", M.base46, theme_customs) or M.base46
+
+M.ui = {
+  cmp = {
+    style = "default",
+  },
+  statusline = {
+    theme = "vscode_colored",
+    order = {
+      "mode",
+      "tint",
+      "filename",
+      "modified",
+      "tint",
+      "git_custom",
+      "%=",
+      "lsp_msg",
+      "%=",
+      "diagnostics",
+      "lspx",
+      "harpoon",
+      "word_count",
+      "separator",
+      "oil_dir_cwd",
+      "cwd",
+      "stop",
+    },
+    modules = {
+      hack = modules.statusline.hack,
+      filename = modules.statusline.filename,
+      harpoon = modules.statusline.harpoon,
+      git_custom = modules.statusline.git_custom,
+      modified = modules.statusline.modified,
+      separator = modules.statusline.separator,
+      word_count = modules.statusline.word_count,
+      oil_dir_cwd = modules.statusline.oil_dir_cwd,
+      stop = modules.statusline.force_stop,
+      tint = modules.statusline.tint,
+      lspx = modules.lspx,
+    },
   },
 
-  -- theme = "catppucin-frape", ---@diagnostic disable-line
-  -- theme_toggle = { "catppucin-frape", "one_light" }, ---@diagnostic disable-line
+  tabufline = {
+    order = { "buffers", "tabs", "btns" },
+  },
 
-  hl_override = highlights.override,
-  hl_add = highlights.add,
+  telescope = { style = "bordered" },
+}
 
-  nvdash = core.nvdash,
+M.cheatsheet = {
+  excluded_groups = { "_" },
 }
 
 M.colorify = {
   enabled = true,
-  mode = "virtual", -- fg, bg, virtual
+  mode = "virtual",
   virt_text = "󱓻 ",
-
-  highlight = {
-    hex = true,
-    lspvars = true,
-  },
+  highlight = { hex = true, lspvars = true },
 }
 
-M.settings = {
-  cc_size = "130",
-  so_size = 10,
-
-  -- Blacklisted files where cc and so must be disabled
-  blacklist = {
-    "NvimTree",
-    "nvdash",
-    "nvcheatsheet",
-    "terminal",
-    "Trouble",
-    "help",
-  },
+M.lsp = {
+  signature = false,
 }
 
-M.lazy_nvim = core.lazy
-
-M.gitsigns = {
-  signs = {
-    add = { text = " " },
-    change = { text = " " },
-    delete = { text = " " },
-    topdelete = { text = " " },
-    changedelete = { text = " " },
-    untracked = { text = " " },
+M.term = {
+  float = {
+    border = "rounded",
+    height = 0.5,
+    width = 0.58,
+    col = 0.2,
+    row = 0.2,
   },
+  sizes = {},
 }
-
-M.plugins = "custom.plugins"
-
--- TODO: Temporary fix for NvChad Mapping changes (I dont wanna edit all my mappings)
-M.mappings = require "custom.old_mappings"
-core.load_mappings "folder"
-core.load_mappings "comment"
-core.load_mappings "development"
-core.load_mappings "text"
-core.load_mappings "go"
-core.load_mappings "window"
-core.load_mappings "general"
-core.load_mappings "diagnostics"
-core.load_mappings "node"
-core.load_mappings "debug"
-core.load_mappings "git"
-core.load_mappings "telescope"
-core.load_mappings "tabufline"
-core.load_mappings "docker"
-core.load_mappings "searchbox"
-core.load_mappings "lspsaga"
-core.load_mappings "nvterm"
-core.load_mappings "harpoon"
-core.load_mappings "lspconfig"
 
 return M
