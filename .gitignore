@@ -1,1 +1,40 @@
+# Neovim
 nvim/plugged
+nvim/lazy
+nvim/.git
+
+# Go
+go/
+*.bin
+*.exe
+*.so
+*.dylib
+*.out
+*.test
+*.prof
+coverage.out
+go.work
+go.work.sum
+
+# Copilot
+github-copilot/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
+*.tmp
