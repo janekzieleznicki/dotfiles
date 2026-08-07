@@ -150,6 +150,8 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
+    build = ":TSUpdate",
     dependencies = {
       "windwp/nvim-ts-autotag",
       "danymat/neogen",
@@ -158,18 +160,11 @@ return {
         opts = {},
       },
     },
-    opts = overrides.treesitter,
-    build = function()
-      vim.cmd("TSUpdate")
-    end,
     init = function(plugin)
-      -- perf: make treesitter queries available at startup.
       require("lazy.core.loader").add_to_rtp(plugin)
-      require "nvim-treesitter.query_predicates"
+      require("nvim-treesitter.configs").setup(overrides.treesitter)
     end,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
+    config = function() end,
   },
   {
     "filNaj/tree-setter",
@@ -182,6 +177,8 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "antosha417/nvim-lsp-file-operations" },
+    cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeClose", "NvimTreeFindFile", "NvimTreeFocus" },
+    event = "VimEnter",
     opts = function()
       return require "configs.tree"
     end,
