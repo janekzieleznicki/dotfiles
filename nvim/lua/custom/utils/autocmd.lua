@@ -20,7 +20,10 @@ autocmd({
 }, {
   group = augroup("barbecue.updater", {}),
   callback = function()
-    require("barbecue.ui").update()
+    local ok, barbecue = pcall(require, "barbecue.ui")
+    if ok then
+      barbecue.update()
+    end
   end,
 })
 autocmd("ModeChanged", {
@@ -336,13 +339,13 @@ autocmd("TextYankPost", {
 autocmd("ModeChanged", {
   group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
   pattern = { "n:i", "n:v", "i:v" },
-  command = "lua vim.diagnostic.disable(0)",
+  command = "lua vim.diagnostic.disable()",
 })
 
 autocmd("ModeChanged", {
   group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
   pattern = "i:n",
-  command = "lua vim.diagnostic.enable(0)",
+  command = "lua vim.diagnostic.enable()",
 })
 
 -- Show cursor line only in active window

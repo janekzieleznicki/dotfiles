@@ -130,6 +130,11 @@ M.treesitter = {
     "dockerfile",
     "regex",
     "toml",
+    "c",
+    "cpp",
+    "rust",
+    "hcl",
+    "terraform",
 
     "gitcommit",
     "git_config",
@@ -225,179 +230,170 @@ M.mason = {
   },
 }
 
-local telescope = require "telescope"
-local actions = require "telescope.actions"
-local previewers = require "telescope.previewers"
 
-local new_maker = function(filepath, bufnr, opts)
-  opts = opts or {}
-  filepath = vim.fn.expand(filepath)
-  vim.uv.fs_stat(filepath, function(_, stat)
-    if not stat then
-      return
-    end
-    if stat.size > 100000 then
-      return
+M.telescope = function()
+  local telescope = require "telescope"
+  local actions = require "telescope.actions"
+  local previewers = require "telescope.previewers"
+
+  local new_maker = function(filepath, bufnr, opts)
+    opts = opts or {}
+    filepath = vim.fn.expand(filepath)
+    vim.uv.fs_stat(filepath, function(_, stat)
+      if not stat then
+        return
+      end
+      if stat.size > 100000 then
+        return
+      else
+        previewers.buffer_previewer_maker(filepath, bufnr, opts)
+      end
+    end)
+  end
+
+  local focus_preview = function(prompt_bufnr)
+    local action_state = require "telescope.actions.state"
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    local prompt_win = picker.prompt_win
+    local previewer = picker.previewer
+    local winid = previewer.state.winid
+    local bufnr = previewer.state.bufnr
+    vim.keymap.set("n", "<Tab>", function()
+      vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
+    end, { buffer = bufnr })
+    vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
+  end
+
+  local select_one_or_multi = function(prompt_bufnr)
+    local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+    local multi = picker:get_multi_selection()
+    if not vim.tbl_isempty(multi) then
+      require("telescope.actions").close(prompt_bufnr)
+      for _, j in pairs(multi) do
+        if j.path ~= nil then
+          vim.cmd(string.format("%s %s", "edit", j.path))
+        end
+      end
     else
-      previewers.buffer_previewer_maker(filepath, bufnr, opts)
-    end
-  end)
-end
-
-local focus_preview = function(prompt_bufnr)
-  local action_state = require "telescope.actions.state"
-  local picker = action_state.get_current_picker(prompt_bufnr)
-  local prompt_win = picker.prompt_win
-  local previewer = picker.previewer
-  local winid = previewer.state.winid
-  local bufnr = previewer.state.bufnr
-  vim.keymap.set("n", "<Tab>", function()
-    vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
-  end, { buffer = bufnr })
-  vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
-  -- api.nvim_set_current_win(winid)
-end
-
-local select_one_or_multi = function(prompt_bufnr)
-  local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
-  local multi = picker:get_multi_selection()
-  if not vim.tbl_isempty(multi) then
-    require("telescope.actions").close(prompt_bufnr)
-    for _, j in pairs(multi) do
-      if j.path ~= nil then
-        vim.cmd(string.format("%s %s", "edit", j.path))
-      end
-    end
-  else
-    require("telescope.actions").select_default(prompt_bufnr)
-  end
-end
-
-local Path = require "plenary.path"
-local function path_filename_first(path)
-  local sep = Path.path.sep
-  local dirs = vim.split(path, sep)
-  local filename = dirs[#dirs]
-  -- typical file path which I expect is something like:
-  --  - .../github.com/username/...
-  --  - .../gitlab.com/username/...
-  -- so I will just start from it
-  for i = 1, #dirs do
-    if dirs[i] == "github.com" or dirs[i] == "gitlab.com" then
-      for j = 1, i do
-        table.remove(dirs, 1)
-      end
+      require("telescope.actions").select_default(prompt_bufnr)
     end
   end
-  local tail = table.concat(dirs, sep)
-  -- Trim prevents a top-level filename to have a trailing white space
-  local transformed_path = vim.trim(filename .. " " .. tail)
-  local path_style = { { { #filename, #transformed_path }, "TelescopeResultsComment" } }
-  return transformed_path, path_style
-end
 
-M.telescope = {
-  pickers = {
-    find_files = {
-      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-    },
-    buffers = {
-      theme = "dropdown",
-      previewer = false,
-      mappings = {
-        i = {
-          ["<c-d>"] = "delete_buffer",
+  local Path = require "plenary.path"
+  local function path_filename_first(path)
+    local sep = Path.path.sep
+    local dirs = vim.split(path, sep)
+    local filename = dirs[#dirs]
+    for i = 1, #dirs do
+      if dirs[i] == "github.com" or dirs[i] == "gitlab.com" then
+        for j = 1, i do
+          table.remove(dirs, 1)
+        end
+      end
+    end
+    local tail = table.concat(dirs, sep)
+    local transformed_path = vim.trim(filename .. " " .. tail)
+    local path_style = { { { #filename, #transformed_path }, "TelescopeResultsComment" } }
+    return transformed_path, path_style
+  end
+
+  return {
+    pickers = {
+      find_files = {
+        find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+      },
+      buffers = {
+        theme = "dropdown",
+        previewer = false,
+        mappings = {
+          i = {
+            ["<c-d>"] = "delete_buffer",
+          },
         },
       },
     },
-  },
-  defaults = {
-    mappings = {
-      i = {
-        ["<C-k>"] = actions.move_selection_previous, -- move to prev result
-        ["<C-j>"] = actions.move_selection_next, -- move to next result
-        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
-        ["<CR>"] = select_one_or_multi,
-        ["<Tab>"] = focus_preview,
+    defaults = {
+      mappings = {
+        i = {
+          ["<C-k>"] = actions.move_selection_previous,
+          ["<C-j>"] = actions.move_selection_next,
+          ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+          ["<CR>"] = select_one_or_multi,
+          ["<Tab>"] = focus_preview,
+        },
       },
-    },
-    -- path_display = {
-    --   filename_first = {
-    --     reverse_directories = true,
-    --   },
-    -- },
-    path_display = function(opts, path)
-      return path_filename_first(path)
-    end,
-    buffer_previewer_maker = new_maker,
-    multi_icon = "",
-    prompt_prefix = "󰼛 ",
-    selection_caret = "󱞩 ",
-    preview = {
-      filetype_hook = function(_, bufnr, opts)
-        -- don't display jank pdf previews
-        if opts.ft == "pdf" then
-          require("telescope.previewers.utils").set_preview_message(bufnr, opts.winid, "Not displaying " .. opts.ft)
-          return false
-        end
-        return true
+      path_display = function(opts, path)
+        return path_filename_first(path)
       end,
-    },
-    file_ignore_patterns = {
-      ".docker",
-      ".git/",
-      ".git\\",
-      "yarn.lock",
-      "go.sum",
-      "go.mod",
-      "tags",
-      "mocks",
-      "refactoring",
-      "^.git/",
-      "^./.git/",
-      "^node_modules/",
-      "node_modules\\",
-      "^build/",
-      "^dist/",
-      "^target/",
-      "^vendor/",
-      "^lazy%-lock%.json$",
-      "^package%-lock%.json$",
-    },
-    layout_config = {
-      horizontal = {
-        prompt_position = "bottom",
+      buffer_previewer_maker = new_maker,
+      multi_icon = "",
+      prompt_prefix = "󰼛 ",
+      selection_caret = "󱞩 ",
+      preview = {
+        filetype_hook = function(_, bufnr, opts)
+          if opts.ft == "pdf" then
+            require("telescope.previewers.utils").set_preview_message(bufnr, opts.winid, "Not displaying " .. opts.ft)
+            return false
+          end
+          return true
+        end,
+      },
+      file_ignore_patterns = {
+        ".docker",
+        ".git/",
+        ".git\\",
+        "yarn.lock",
+        "go.sum",
+        "go.mod",
+        "tags",
+        "mocks",
+        "refactoring",
+        "^.git/",
+        "^./.git/",
+        "^node_modules/",
+        "node_modules\\",
+        "^build/",
+        "^dist/",
+        "^target/",
+        "^vendor/",
+        "^lazy%-lock%.json$",
+        "^package%-lock%.json$",
+      },
+      layout_config = {
+        horizontal = {
+          prompt_position = "bottom",
+        },
       },
     },
-  },
-  extensions_list = {
-    "themes",
-    "undo",
-    "ast_grep",
-    "ctags_plus",
-    "luasnip",
-    "fzf",
-  },
-  extensions = {
-    fzf = {
-      override_generic_sorter = true,
-      override_file_sorter = true,
-      case_mode = "smart_case",
-      fuzzy = true,
+    extensions_list = {
+      "themes",
+      "undo",
+      "ast_grep",
+      "ctags_plus",
+      "luasnip",
+      "fzf",
     },
-    ast_grep = {
-      command = {
-        "sg",
-        "--json=stream",
-        "-p",
+    extensions = {
+      fzf = {
+        override_generic_sorter = true,
+        override_file_sorter = true,
+        case_mode = "smart_case",
+        fuzzy = true,
       },
-      grep_open_files = false,
-      lang = nil,
+      ast_grep = {
+        command = {
+          "sg",
+          "--json=stream",
+          "-p",
+        },
+        grep_open_files = false,
+        lang = nil,
+      },
+      import = {
+        insert_at_top = true,
+      },
     },
-    import = {
-      insert_at_top = true,
-    },
-  },
-}
+  }
+end
 
 return M

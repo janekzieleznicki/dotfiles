@@ -1,5 +1,4 @@
 local M = {}
-local copilot_status_ok, copilot_cmp_comparators = pcall(require, "copilot_cmp.comparators")
 local list_contains = vim.list_contains or vim.tbl_contains
 
 local function deprioritize_snippet(entry1, entry2)
@@ -122,201 +121,189 @@ local disabled_buftypes = {
   "prompt",
 }
 
-M.cmp = {
-  enabled = function()
-    local disabled = false
-    disabled = disabled or is_dap_buffer(0)
-    disabled = disabled or (list_contains(disabled_buftypes, vim.api.nvim_get_option_value("buftype", { buf = 0 })))
-    disabled = disabled or (vim.fn.reg_recording() ~= "")
-    disabled = disabled or (vim.fn.reg_executing() ~= "")
-    disabled = disabled or (require("cmp.config.context").in_treesitter_capture "comment" == true)
-    disabled = disabled or (require("cmp.config.context").in_syntax_group "Comment" == true)
-    disabled = disabled or (vim.api.nvim_get_mode().mode == "c")
-    disabled = disabled or vim.api.nvim_buf_get_name(0) == "lsp:rename"
-    disabled = disabled or vim.b.rename
+M.cmp = function()
+  local cmp = require "cmp"
+  local cmp_types = require "cmp.types"
+  local luasnip = require "luasnip"
+  local neogen = require "neogen"
 
-    return not disabled
-  end,
-  preselect = require("cmp").PreselectMode.None,
-  window = {
+  return {
+    enabled = function()
+      local disabled = false
+      disabled = disabled or is_dap_buffer(0)
+      disabled = disabled or (list_contains(disabled_buftypes, vim.api.nvim_get_option_value("buftype", { buf = 0 })))
+      disabled = disabled or (vim.fn.reg_recording() ~= "")
+      disabled = disabled or (vim.fn.reg_executing() ~= "")
+      disabled = disabled or (require("cmp.config.context").in_treesitter_capture "comment" == true)
+      disabled = disabled or (require("cmp.config.context").in_syntax_group "Comment" == true)
+      disabled = disabled or (vim.api.nvim_get_mode().mode == "c")
+      disabled = disabled or vim.api.nvim_buf_get_name(0) == "lsp:rename"
+      disabled = disabled or vim.b.rename
+
+      return not disabled
+    end,
+    preselect = cmp.PreselectMode.None,
+    window = {
+      completion = {
+        scrolloff = 0,
+        col_offset = 0,
+        scrollbar = false,
+        border = {
+          { "󱐋", "WarningMsg" },
+          { "─", "Comment" },
+          { "╮", "Comment" },
+          { "│", "Comment" },
+          { "╯", "Comment" },
+          { "─", "Comment" },
+          { "╰", "Comment" },
+          { "│", "Comment" },
+        },
+      },
+      documentation = {
+        border = {
+          { "", "DiagnosticHint" },
+          { "─", "Comment" },
+          { "╮", "Comment" },
+          { "│", "Comment" },
+          { "╯", "Comment" },
+          { "─", "Comment" },
+          { "╰", "Comment" },
+          { "│", "Comment" },
+        },
+        max_height = math.floor(vim.o.lines * 0.5),
+        max_width = math.floor(vim.o.columns * 0.4),
+        scrollbar = false,
+      },
+    },
+    view = {
+      entries = {
+        follow_cursor = true,
+      },
+    },
     completion = {
-      scrolloff = 0,
-      col_offset = 0,
-      scrollbar = false,
-      border = {
-        { "󱐋", "WarningMsg" },
-        { "─", "Comment" },
-        { "╮", "Comment" },
-        { "│", "Comment" },
-        { "╯", "Comment" },
-        { "─", "Comment" },
-        { "╰", "Comment" },
-        { "│", "Comment" },
-      },
+      completeopt = "menu,menuone,noinsert,noselect",
+      autocomplete = { cmp_types.cmp.TriggerEvent.TextChanged },
+      keyword_length = 2,
     },
-    documentation = {
-      border = {
-        { "", "DiagnosticHint" },
-        { "─", "Comment" },
-        { "╮", "Comment" },
-        { "│", "Comment" },
-        { "╯", "Comment" },
-        { "─", "Comment" },
-        { "╰", "Comment" },
-        { "│", "Comment" },
-      },
-      max_height = math.floor(vim.o.lines * 0.5),
-      max_width = math.floor(vim.o.columns * 0.4),
-      scrollbar = false,
-    },
-  },
-  view = {
-    entries = {
-      follow_cursor = true,
-    },
-  },
-  completion = {
-    completeopt = "menu,menuone,noinsert,noselect",
-    autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged },
-    keyword_length = 2,
-  },
-  -- experimental = {
-  --   ghost_text = {
-  --     hl_group = "Comment",
-  --   },
-  -- },
-  mapping = {
-    ["<Up>"] = select_item_smart "prev",
-    ["<Down>"] = select_item_smart "next",
-    ["<Left>"] = function(fallback)
-      require("cmp").abort()
-      fallback()
-    end,
-    ["<Right>"] = function(fallback)
-      require("cmp").abort()
-      fallback()
-    end,
-    ["<Tab>"] = require("cmp").mapping(function(fallback)
-      if require("luasnip").expandable() then
-        require("luasnip").expand()
-      elseif require("luasnip").expand_or_jumpable() then
-        require("luasnip").expand_or_jump()
-      elseif require("neogen").jumpable() then
-        require("neogen").jump()
-      elseif check_backspace() then
+    mapping = {
+      ["<Up>"] = select_item_smart "prev",
+      ["<Down>"] = select_item_smart "next",
+      ["<Left>"] = function(fallback)
+        cmp.abort()
         fallback()
-      else
+      end,
+      ["<Right>"] = function(fallback)
+        cmp.abort()
         fallback()
-      end
-    end, {
-      "i",
-      "s",
-    }),
-    ["<S-tab>"] = require("cmp").mapping(function(fallback)
-      if require("neogen").jumpable(true) then
-        require("neogen").jump_prev()
-      else
-        fallback()
-      end
-    end, {
-      "i",
-      "s",
-    }),
-    ["/"] = require("cmp").mapping.close(),
-    ["<CR>"] = require("cmp").mapping {
-      i = function(fallback)
-        if require("cmp").visible() and require("cmp").get_active_entry() then
-          require("cmp").confirm { behavior = require("cmp").ConfirmBehavior.Replace, select = false }
+      end,
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        if luasnip.expandable() then
+          luasnip.expand()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        elseif neogen.jumpable() then
+          neogen.jump()
+        elseif check_backspace() then
+          fallback()
         else
           fallback()
         end
+      end, {
+        "i",
+        "s",
+      }),
+      ["<S-tab>"] = cmp.mapping(function(fallback)
+        if neogen.jumpable(true) then
+          neogen.jump_prev()
+        else
+          fallback()
+        end
+      end, {
+        "i",
+        "s",
+      }),
+      ["/"] = cmp.mapping.close(),
+      ["<CR>"] = cmp.mapping {
+        i = function(fallback)
+          if cmp.visible() and cmp.get_active_entry() then
+            cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false }
+          else
+            fallback()
+          end
+        end,
+        s = cmp.mapping.confirm { select = true },
+        c = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+      },
+      ["<ESC>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.abort()
+          cmp.close()
+        else
+          fallback()
+        end
+      end, {
+        "i",
+        "s",
+      }),
+    },
+    performance = {
+      debounce = 30,
+      throttle = 20,
+      async_budget = 0.8,
+      max_view_entries = 10,
+      fetching_timeout = 250,
+    },
+    snippet = {
+      expand = function(args)
+        luasnip.lsp_expand(args.body)
       end,
-      s = require("cmp").mapping.confirm { select = true },
-      c = require("cmp").mapping.confirm { behavior = require("cmp").ConfirmBehavior.Replace, select = true },
     },
-    ["<ESC>"] = require("cmp").mapping(function(fallback)
-      if require("cmp").visible() then
-        require("cmp").abort()
-        require("cmp").close()
-      else
-        fallback()
-      end
-    end, {
-      "i",
-      "s",
-    }),
-  },
-  -- explanations: https://github.com/hrsh7th/nvim-cmp/blob/main/doc/cmp.txt#L425
-  performance = {
-    debounce = 30,
-    throttle = 20,
-    async_budget = 0.8,
-    max_view_entries = 10,
-    fetching_timeout = 250,
-  },
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body)
-    end,
-  },
-  sources = {
-    {
-      name = "copilot",
-      max_item_count = 2,
-    },
-    {
-      name = "cmp_tabnine",
-      max_item_count = 2,
-    },
-    {
-      name = "nvim_lsp",
-      keyword_length = 2,
-      max_item_count = 10,
-      -- entry_filter = function(entry, ctx)
-      --   return require("cmp").lsp.CompletionItemKind.Text ~= entry:get_kind()
-      -- end,
-      entry_filter = limit_lsp_types,
-    },
-    { name = "treesitter" },
-    {
-      name = "luasnip",
-      max_item_count = 2,
-      -- Don't show snippet completions in comments or strings.
-      entry_filter = function()
-        local ctx = require "cmp.config.context"
-        local in_string = ctx.in_syntax_group "String" or ctx.in_treesitter_capture "string"
-        local in_comment = ctx.in_syntax_group "Comment" or ctx.in_treesitter_capture "comment"
+    sources = {
+      {
+        name = "nvim_lsp",
+        keyword_length = 2,
+        max_item_count = 10,
+        entry_filter = limit_lsp_types,
+      },
+      { name = "treesitter" },
+      {
+        name = "luasnip",
+        max_item_count = 2,
+        entry_filter = function()
+          local ctx = require "cmp.config.context"
+          local in_string = ctx.in_syntax_group "String" or ctx.in_treesitter_capture "string"
+          local in_comment = ctx.in_syntax_group "Comment" or ctx.in_treesitter_capture "comment"
 
-        return not in_string and not in_comment
-      end,
+          return not in_string and not in_comment
+        end,
+      },
+      { name = "lazydev" },
+      { name = "luasnip_choice" },
     },
-    { name = "lazydev" },
-    { name = "luasnip_choice" },
-  },
-  matching = {
-    disallow_fuzzy_matching = true,
-    disallow_fullfuzzy_matching = true,
-    disallow_partial_fuzzy_matching = true,
-    disallow_partial_matching = false,
-    disallow_prefix_unmatching = true,
-  },
-  sorting = {
-    priority_weight = 2,
-    comparators = {
-      -- Definitions of compare function https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
-      copilot_cmp_comparators.prioritize or function() end,
-      deprioritize_snippet,
-      require("cmp").config.compare.exact,
-      require("cmp").config.compare.locality,
-      require("cmp").config.compare.recently_used,
-      under,
-      require("cmp").config.compare.score,
-      require("cmp").config.compare.kind,
-      require("cmp").config.compare.length,
-      require("cmp").config.compare.order,
-      require("cmp").config.compare.sort_text,
+    matching = {
+      disallow_fuzzy_matching = true,
+      disallow_fullfuzzy_matching = true,
+      disallow_partial_fuzzy_matching = true,
+      disallow_partial_matching = false,
+      disallow_prefix_unmatching = true,
     },
-  },
-}
+    sorting = {
+      priority_weight = 2,
+      comparators = {
+        copilot_cmp_comparators.prioritize or function() end,
+        deprioritize_snippet,
+        cmp.config.compare.exact,
+        cmp.config.compare.locality,
+        cmp.config.compare.recently_used,
+        under,
+        cmp.config.compare.score,
+        cmp.config.compare.kind,
+        cmp.config.compare.length,
+        cmp.config.compare.order,
+        cmp.config.compare.sort_text,
+      },
+    },
+  }
+end
 
 return M

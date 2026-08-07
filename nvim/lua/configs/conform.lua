@@ -1,11 +1,8 @@
 local conform = require "conform"
 
----@param bufnr integer
----@param ... string
----@return string
 local function first(bufnr, ...)
-  for i = 1, select("#", ...) do
-    local formatter = select(i, ...)
+  for index = 1, select("#", ...) do
+    local formatter = select(index, ...)
     if conform.get_formatter_info(formatter, bufnr).available then
       return formatter
     end
@@ -14,34 +11,47 @@ local function first(bufnr, ...)
 end
 
 conform.setup {
-  notify_on_error = false,
-  kulala = {
-    command = "kulala-fmt",
-    args = { "$FILENAME" },
-    stdin = false,
+  format_on_save = function(bufnr)
+    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+      return
+    end
+    return {
+      lsp_format = "fallback",
+      timeout_ms = 1000,
+    }
+  end,
+  formatters = {
+    kulala = {
+      command = "kulala-fmt",
+      args = { "$FILENAME" },
+      stdin = false,
+    },
   },
   formatters_by_ft = {
+    c = { "clang_format" },
+    cpp = { "clang_format" },
+    go = function(bufnr)
+      return { first(bufnr, "goimports", "gofumpt") }
+    end,
+    rust = { "rustfmt", lsp_format = "fallback" },
+    terraform = { "terraform_fmt" },
+    ["terraform-vars"] = { "terraform_fmt" },
+    hcl = { "terraform_fmt" },
+    lua = { "stylua" },
+    yaml = { "yamlfmt" },
+    ["yaml.ansible"] = { "yamlfmt" },
+    bash = { "shfmt" },
+    sh = { "shfmt" },
     javascript = { "prettier" },
-    typescript = { "prettier" },
     javascriptreact = { "prettier" },
+    typescript = { "prettier" },
     typescriptreact = { "prettier" },
     json = { "prettier" },
     jsonc = { "prettier" },
     css = { "prettier" },
     html = { "prettier" },
     markdown = { "prettier" },
-    query = { 'format-queries' },
-    lua = { "stylua" },
     http = { "kulala" },
-    go = function(bufnr)
-      return { first(bufnr, "goimports", "gofumpt") }
-    end,
-    ["vue"] = { "prettier" },
-    ["scss"] = { "prettier" },
-    ["less"] = { "prettier" },
-    ["yaml"] = { "prettier" },
-    ["markdown.mdx"] = { "prettier" },
-    ["graphql"] = { "prettier" },
-    ["handlebars"] = { "prettier" },
   },
+  notify_on_error = false,
 }

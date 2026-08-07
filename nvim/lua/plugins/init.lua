@@ -34,10 +34,36 @@ return {
           auto_update = true,
           run_on_start = true,
           ensure_installed = {
-            "impl",
+            "ansible-language-server",
+            "ansible-lint",
+            "bash-language-server",
+            "clang-format",
+            "clangd",
+            "codelldb",
+            "delve",
+            "dockerfile-language-server",
+            "golangci-lint",
+            "golangci-lint-langserver",
+            "gofumpt",
+            "goimports",
             "gomodifytags",
-            "iferr",
+            "gopls",
             "gotests",
+            "iferr",
+            "impl",
+            "json-lsp",
+            "lua-language-server",
+            "marksman",
+            "prettier",
+            "rust-analyzer",
+            "shellcheck",
+            "shfmt",
+            "stylua",
+            "terraform-ls",
+            "tflint",
+            "yaml-language-server",
+            "yamlfmt",
+            "yamllint",
           },
         },
         cmd = "MasonToolsUpdate",
@@ -50,6 +76,40 @@ return {
   {
     "folke/which-key.nvim",
     enabled = true,
+  },
+  {
+    "nickjvandyke/opencode.nvim",
+    version = "*",
+    keys = {
+      {
+        "<leader>aa",
+        function()
+          require("opencode").ask "@this: "
+        end,
+        mode = { "n", "x" },
+        desc = "Ask OpenCode",
+      },
+      {
+        "<leader>as",
+        function()
+          require("opencode").select()
+        end,
+        mode = { "n", "x" },
+        desc = "Select OpenCode action",
+      },
+      {
+        "<leader>ax",
+        function()
+          return require("opencode").operator "@this "
+        end,
+        mode = { "n", "x" },
+        expr = true,
+        desc = "Send range to OpenCode",
+      },
+    },
+    init = function()
+      vim.g.opencode_opts = {}
+    end,
   },
   {
     "nvzone/volt",
@@ -92,8 +152,6 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
       "windwp/nvim-ts-autotag",
-      "filNaj/tree-setter",
-      "RRethy/nvim-treesitter-textsubjects",
       "danymat/neogen",
       {
         "folke/ts-comments.nvim",
@@ -101,7 +159,9 @@ return {
       },
     },
     opts = overrides.treesitter,
-    build = ":TSUpdate",
+    build = function()
+      vim.cmd("TSUpdate")
+    end,
     init = function(plugin)
       -- perf: make treesitter queries available at startup.
       require("lazy.core.loader").add_to_rtp(plugin)
@@ -112,9 +172,19 @@ return {
     end,
   },
   {
+    "filNaj/tree-setter",
+    event = "BufReadPost",
+  },
+  {
+    "RRethy/nvim-treesitter-textsubjects",
+    event = "BufReadPost",
+  },
+  {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "antosha417/nvim-lsp-file-operations" },
-    opts = require "configs.tree",
+    opts = function()
+      return require "configs.tree"
+    end,
     config = function(_, opts)
       require("nvim-tree").setup(opts)
       require("nvim-tree.diagnostics").update_lsp()
@@ -126,7 +196,7 @@ return {
   },
   {
     "sphamba/smear-cursor.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     cond = function()
       return not vim.g.neovide
     end,
@@ -161,7 +231,6 @@ return {
     url = "https://github.com/iguanacucumber/magazine.nvim",
     opts = cmp_opt.cmp,
     dependencies = {
-      "hrsh7th/cmp-copilot",
       "ray-x/cmp-treesitter",
       {
         "L3MON4D3/LuaSnip",
@@ -177,46 +246,6 @@ return {
         "windwp/nvim-autopairs",
         config = function()
           require "configs.autopair"
-        end,
-      },
-      {
-        "zbirenbaum/copilot.lua",
-        event = "InsertEnter",
-        dependencies = {
-          {
-            "zbirenbaum/copilot-cmp",
-            config = function()
-              require("copilot_cmp").setup()
-            end,
-          },
-        },
-        config = function()
-          require("copilot").setup {
-            suggestion = {
-              enabled = false,
-              auto_trigger = false,
-              keymap = {
-                accept_word = false,
-                accept_line = false,
-              },
-            },
-            panel = {
-              enabled = false,
-            },
-            filetypes = {
-              gitcommit = false,
-              TelescopePrompt = false,
-            },
-            server_opts_overrides = {
-              trace = "verbose",
-              settings = {
-                advanced = {
-                  listCount = 3,
-                  inlineSuggestCount = 3,
-                },
-              },
-            },
-          }
         end,
       },
     },
@@ -333,7 +362,7 @@ return {
   },
   {
     "rmagatti/auto-session",
-    lazy = false,
+    event = "BufReadPost",
     config = function()
       require("auto-session").setup {
         enabled = true,
@@ -346,110 +375,7 @@ return {
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
-    event = "VeryLazy",
     opts = {},
-  },
-  {
-    "epwalsh/obsidian.nvim",
-    event = {
-      "BufReadPre /users/bruno.krugel/Library/Mobile Documents/iCloud~md~obsidian/Documents/Annotation/**.md",
-    },
-    dependencies = {
-      "MeanderingProgrammer/render-markdown.nvim",
-      opts = {
-        heading = {
-          sign = false,
-          icons = { " ", " ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-          width = 79,
-        },
-        code = {
-          sign = false,
-          width = "block", -- use 'language' if colorcolumn is important for you.
-          right_pad = 1,
-        },
-        dash = {
-          width = 79,
-        },
-        pipe_table = {
-          style = "full", -- use 'normal' if colorcolumn is important for you.
-        },
-      },
-    },
-    config = function()
-      require("obsidian").setup {
-        dir = "/users/bruno.krugel/Library/Mobile Documents/iCloud~md~obsidian/Documents/Annotation",
-        disable_frontmatter = true,
-        workspaces = {
-          {
-            name = "Annotation",
-            path = "~/users/bruno.krugel/Library/Mobile Documents/iCloud~md~obsidian/Documents/Annotation",
-          },
-        },
-        completion = {
-          nvim_cmp = true,
-          min_chars = 2,
-        },
-        -- Optional, customize how markdown links are formatted.
-        ---@param opts {path: string, label: string, id: string|?}
-        ---@return string
-        markdown_link_func = function(opts)
-          return string.format("[%s](%s)", opts.label, opts.path)
-        end,
-        ui = {
-          enable = true, -- set to false to disable all additional syntax features
-          update_debounce = 200, -- update delay after a text change (in milliseconds)
-          -- Define how various check-boxes are displayed
-          checkboxes = {
-            -- NOTE: the 'char' value has to be a single character, and the highlight groups are defined below.
-            [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-            ["x"] = { char = "", hl_group = "ObsidianDone" },
-            [">"] = { char = "", hl_group = "ObsidianRightArrow" },
-            ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-            -- Replace the above with this if you don't have a patched font:
-            -- [" "] = { char = "☐", hl_group = "ObsidianTodo" },
-            -- ["x"] = { char = "✔", hl_group = "ObsidianDone" },
-
-            -- You can also add more custom ones...
-          },
-          -- Use bullet marks for non-checkbox lists.
-          bullets = { char = "•", hl_group = "ObsidianBullet" },
-          external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
-          -- Replace the above with this if you don't have a patched font:
-          -- external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
-          reference_text = { hl_group = "ObsidianRefText" },
-          highlight_text = { hl_group = "ObsidianHighlightText" },
-          tags = { hl_group = "ObsidianTag" },
-          hl_groups = {
-            -- The options are passed directly to `vim.api.nvim_set_hl()`. See `:help nvim_set_hl`.
-            ObsidianTodo = { bold = true, fg = "#f78c6c" },
-            ObsidianDone = { bold = true, fg = "#89ddff" },
-            ObsidianRightArrow = { bold = true, fg = "#f78c6c" },
-            ObsidianTilde = { bold = true, fg = "#ff5370" },
-            ObsidianBullet = { bold = true, fg = "#89ddff" },
-            ObsidianRefText = { underline = true, fg = "#c792ea" },
-            ObsidianExtLinkIcon = { fg = "#c792ea" },
-            ObsidianTag = { italic = true, fg = "#89ddff" },
-            ObsidianHighlightText = { bg = "#75662e" },
-          },
-        },
-      }
-    end,
-  },
-  {
-    "jonahgoldwastaken/copilot-status.nvim",
-    event = "LspAttach",
-    config = function()
-      require("copilot_status").setup {
-        icons = {
-          idle = " ",
-          error = " ",
-          offline = " ",
-          warning = " ",
-          loading = " ",
-        },
-        debug = false,
-      }
-    end,
   },
   {
     "folke/lazydev.nvim",
@@ -493,7 +419,22 @@ return {
     main = "ibl",
     opts = {
       scope = { enabled = false },
+      indent = {
+        char = "│",
+        highlight = { "IblIndent" },
+      },
+      whitespace = {
+        highlight = { "IblWhitespace" },
+      },
     },
+    config = function(_, opts)
+      require("ibl").setup(opts)
+      local hooks = require "ibl.hooks"
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "IblIndent", { fg = "#3b4252" })
+        vim.api.nvim_set_hl(0, "IblWhitespace", { fg = "#3b4252" })
+      end)
+    end,
   },
   {
     "smoka7/hop.nvim",
@@ -517,13 +458,18 @@ return {
     ops = {},
   },
   {
-    "declancm/vim2vscode",
-    cmd = "Code",
-  },
-  {
     "mfussenegger/nvim-dap",
     cmd = { "DapContinue", "DapStepOver", "DapStepInto", "DapStepOut", "DapToggleBreakpoint" },
     dependencies = {
+      {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = "williamboman/mason.nvim",
+        opts = {
+          automatic_installation = true,
+          ensure_installed = { "codelldb", "delve" },
+          handlers = {},
+        },
+      },
       {
         "theHamsta/nvim-dap-virtual-text",
         config = function()
@@ -544,15 +490,75 @@ return {
       },
       {
         "rcarriga/nvim-dap-ui",
+        dependencies = "nvim-neotest/nvim-nio",
         config = function()
           require "configs.dapui"
         end,
       },
     },
+    config = function()
+      local dap = require "dap"
+      local mason_bin = vim.fn.stdpath "data" .. "/mason/bin/"
+
+      dap.adapters.codelldb = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = mason_bin .. "codelldb",
+          args = { "--port", "${port}" },
+        },
+      }
+      dap.adapters.delve = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = mason_bin .. "dlv",
+          args = { "dap", "-l", "127.0.0.1:${port}" },
+        },
+      }
+
+      local native = {
+        {
+          name = "Launch executable",
+          type = "codelldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        },
+      }
+      dap.configurations.c = native
+      dap.configurations.cpp = native
+      dap.configurations.rust = native
+      dap.configurations.go = {
+        {
+          name = "Debug package",
+          type = "delve",
+          request = "launch",
+          program = "${fileDirname}",
+        },
+        {
+          name = "Debug test",
+          type = "delve",
+          request = "launch",
+          mode = "test",
+          program = "${fileDirname}",
+        },
+      }
+
+      require("dap.ext.vscode").load_launchjs(nil, {
+        codelldb = { "c", "cpp", "rust" },
+        cppdbg = { "c", "cpp" },
+        delve = { "go" },
+        go = { "go" },
+      })
+    end,
   },
   {
     "Weissle/persistent-breakpoints.nvim",
-    ft = "go",
+    ft = { "c", "cpp", "go", "rust" },
     config = function()
       require("persistent-breakpoints").setup {
         load_breakpoints_event = { "BufReadPost" },
@@ -616,13 +622,10 @@ return {
   },
   {
     "zeioth/garbage-day.nvim",
-    event = "VeryLazy",
+    event = "LspAttach",
     opts = {
       notifications = false,
-      excluded_lsp_clients = {
-        "copilot",
-        "GitHub Copilot",
-      },
+      excluded_lsp_clients = {},
     },
   },
   {
@@ -638,7 +641,6 @@ return {
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
       {
         "rcarriga/nvim-notify",
         opts = {
@@ -708,7 +710,7 @@ return {
                 {
                   severity = vim.diagnostic.severity.ERROR,
                   function(item)
-                    return item.filename:find(true, 1, (vim.uv or vim.uv).cwd())
+                    return item.filename:find(vim.uv.cwd(), 1, true)
                   end,
                 },
               },
@@ -746,7 +748,7 @@ return {
   },
   {
     "echasnovski/mini.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     config = function()
       require("mini.animate").setup {
         scroll = {
@@ -766,7 +768,7 @@ return {
   },
   {
     "akinsho/git-conflict.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     opts = {
       default_mappings = {
         ours = "<leader>gco",
@@ -792,14 +794,14 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
-    lazy = false,
+    event = "BufReadPost",
     config = function()
       require "configs.statuscol"
     end,
   },
   {
     "kevinhwang91/nvim-ufo",
-    lazy = false,
+    event = "BufReadPost",
     dependencies = "kevinhwang91/promise-async",
     config = function()
       require "configs.ufo"
@@ -1000,7 +1002,14 @@ return {
   },
   {
     "akinsho/toggleterm.nvim",
-    keys = { [[<C-\>]] },
+    keys = {
+      [[<C-\>]],
+      {
+        "<leader>ap",
+        "<cmd>ToggleTerm cmd=omp direction=float count=99<cr>",
+        desc = "Toggle Oh My Pi",
+      },
+    },
     cmd = { "ToggleTerm", "ToggleTermOpenAll", "ToggleTermCloseAll" },
     opts = {
       size = function(term)
@@ -1065,6 +1074,7 @@ return {
       },
       {
         "jack-rabe/impl.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
         opts = {
           layout_strategy = "vertical",
           layout_config = {
@@ -1112,10 +1122,11 @@ return {
   },
   {
     "nvim-neotest/neotest",
-    ft = { "go", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    ft = { "go", "rust" },
     dependencies = {
       "nvim-neotest/neotest-go",
       "nvim-neotest/nvim-nio",
+      "mrcjkb/rustaceanvim",
     },
     config = function()
       ---@diagnostic disable-next-line: different-requires
@@ -1140,7 +1151,6 @@ return {
   },
   {
     "mfussenegger/nvim-lint",
-    dependencies = { "rshkarin/mason-nvim-lint" },
     event = {
       "BufReadPre",
       "BufNewFile",
@@ -1152,7 +1162,6 @@ return {
   {
     "stevearc/conform.nvim",
     event = "BufReadPre",
-    dependencies = { "zapling/mason-conform.nvim" },
     config = function()
       require "configs.conform"
     end,
@@ -1162,7 +1171,7 @@ return {
   },
   {
     "sustech-data/wildfire.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     opts = {},
   },
   {
@@ -1208,15 +1217,5 @@ return {
       },
       show_success_message = true,
     },
-  },
-  ----------------------------------------- completions plugins ------------------------------------------
-  {
-    "github/copilot.vim",
-    lazy = false,
-    config = function()
-      require("copilot").setup()
-      vim.api.nvim_set_hl(0, "CopilotSuggestion", { fg = "#83a598" })
-      vim.api.nvim_set_hl(0, "CopilotAnnotation", { fg = "#03a598" })
-    end,
   },
 }

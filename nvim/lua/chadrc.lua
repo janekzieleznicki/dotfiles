@@ -30,68 +30,38 @@ M.ui = {
 
 M.nvdash = core.nvdash
 
-
 M.lsp = { signature = false }
 
 M.mason = {
-pkgs = {
-    -- lua stuff
-    "lua-language-server",
-    "stylua",
-
-
-    -- web dev stuff
-    "css-lsp",
-    "html-lsp",
-    "htmx-lsp", --experimental new lsp
-    "typescript-language-server",
-    "svelte-language-server",
-    "astro-language-server",
-    "vetur-vls", --vue lsp
-    "tailwindcss-language-server",
-    "deno",
-    "prettier",
-    -- for djinja or django templating
-    "djlint",
-    "python-lsp-server",
-
-    --data/content general
+  pkgs = {
+    "ansible-language-server",
+    "ansible-lint",
+    "bash-language-server",
+    "clang-format",
+    "clangd",
+    "codelldb",
+    "delve",
+    "dockerfile-language-server",
+    "golangci-lint",
+    "golangci-lint-langserver",
+    "gofumpt",
+    "goimports",
+    "gopls",
     "json-lsp",
-    "markdownlint",
+    "lua-language-server",
     "marksman",
-    "sqlls", --golang version of sqlls
-    "sqlfmt",
+    "prettier",
+    "rust-analyzer",
+    "shellcheck",
+    "shfmt",
+    "stylua",
+    "taplo",
+    "terraform-ls",
+    "tflint",
     "yaml-language-server",
     "yamlfmt",
     "yamllint",
-
-    --rust
-    -- "rust-analyzer",
-    "taplo", --for toml lsp
-
-    --solidity
-    "solidity",
-
-    -- c/cpp stuff
-    "clangd",
-    "clang-format",
-    "cmake-language-server",
-
-    --go
-    "gopls",
-    "goimports",
-
-    --godot
-    "gdtoolkit",
-
-    --proxy or container
-    "docker-compose-language-service",
-    "dockerfile-language-server",
-    "nginx-language-server",
-
-    --arduino
-    "arduino-language-server",
-},
+  },
 }
 
 M.base46 = {
@@ -168,29 +138,5 @@ M.gitsigns = {
     untracked = { text = " " },
   },
 }
-
-M.plugins = "custom.plugins"
-
--- TODO: Temporary fix for NvChad Mapping changes (I dont wanna edit all my mappings)
-M.mappings = require "custom.old_mappings"
-core.load_mappings "folder"
-core.load_mappings "comment"
-core.load_mappings "development"
-core.load_mappings "text"
-core.load_mappings "go"
-core.load_mappings "window"
-core.load_mappings "general"
-core.load_mappings "diagnostics"
-core.load_mappings "node"
-core.load_mappings "debug"
-core.load_mappings "git"
-core.load_mappings "telescope"
-core.load_mappings "tabufline"
-core.load_mappings "docker"
-core.load_mappings "searchbox"
-core.load_mappings "lspsaga"
-core.load_mappings "nvterm"
-core.load_mappings "harpoon"
-core.load_mappings "lspconfig"
 
 return M

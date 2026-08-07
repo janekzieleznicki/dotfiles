@@ -176,8 +176,8 @@ map("n", "<RightMouse>", function()
 end, { desc = "Open NvChad menu" })
 
 vim.keymap.set({ "n" }, "<leader>m", function()
-  local dap = require("dap")
-  require("menu").open({
+  local dap = require "dap"
+  require("menu").open {
     -- {
     --   name = "󰤑 Run Tests",
     --   hl = "@conditional",
@@ -238,7 +238,7 @@ vim.keymap.set({ "n" }, "<leader>m", function()
       end,
       rtxt = "s",
     },
-  })
+  }
 end)
 
 --------------------------------------------------- Editor ---------------------------------------------------
@@ -273,7 +273,7 @@ map({ "n" }, "<ESC>", function()
 end, { desc = " Clear highlights" })
 
 map("n", "<leader>q", "<CMD>q<CR>", { desc = "󰗼 Close" })
-map("n", "<leader>qq", "<<CMD>qa!<CR>", { desc = "󰗼 Exit" })
+map("n", "<leader>qq", "<CMD>qa!<CR>", { desc = "󰗼 Exit" })
 
 -- NvimTree
 map({ "n" }, "<leader>e", "<cmd> NvimTreeToggle <CR>", { desc = "󰔱 Toggle nvimtree" })
@@ -289,7 +289,6 @@ map({ "n", "i", "v" }, "<C-a>", "<cmd>normal! ggVG<cr>", { desc = "Select all" }
 map("i", "<S-CR>", function()
   vim.cmd "normal o"
 end, { desc = " New line" })
-
 
 map("i", "<A-BS>", "<C-w>", { desc = "Remove word in insert mode" })
 
@@ -389,14 +388,25 @@ map("n", "<leader><leader>c", "<cmd>CoverageLoad<cr><cmd>CoverageSummary<cr>", {
 map("n", "K", function()
   local winid = require("ufo").peekFoldedLinesUnderCursor()
   if not winid then
-    require("hover").hover()
+    local ok, hover = pcall(require, "hover")
+    if ok then
+      hover.hover()
+    end
   end
 end, { desc = "hover.nvim" })
 
-map("n", "gK", require("hover").hover_select, { desc = "hover.nvim (select)" })
+map("n", "gK", function()
+  local ok, hover = pcall(require, "hover")
+  if ok then
+    hover.hover_select()
+  end
+end, { desc = "hover.nvim (select)" })
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "<C-n>", function()
-  require("hover").hover_switch "next"
+  local ok, hover = pcall(require, "hover")
+  if ok then
+    hover.hover_switch "next"
+  end
 end, { desc = "hover.nvim (next source)" })
 
 map("n", "<F12>", "<CMD>Glance references<CR>", { desc = "󰘐 References" })

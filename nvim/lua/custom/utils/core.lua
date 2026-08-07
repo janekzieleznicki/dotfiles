@@ -76,7 +76,7 @@ end
 
 local function hasLspErrors()
   local bufnr = vim.api.nvim_get_current_buf()
-  local diagnostics = vim.lsp.diagnostic.get(bufnr)
+  local diagnostics = vim.diagnostic.get(bufnr)
 
   for _, diagnostic in pairs(diagnostics) do
     if diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Error then
@@ -267,13 +267,17 @@ M.tabufline = {
       return "%#SplitHl#%@v:lua.ClickUpdate@  %#SplitHl#%@v:lua.ClickGit@  %#SplitHl#%@v:lua.ClickSplit@ "
     end,
     harpoon = function()
+      local ok, harpoon = pcall(require, "harpoon")
+      if not ok then
+        return ""
+      end
+      local list = harpoon:list()
       local options = {
         icon = "󰀱 ",
         indicators = { "1", "2", "3", "4" },
         active_indicators = { "[1]", "[2]", "[3]", "[4]" },
         separator = " ",
       }
-      local list = require("harpoon"):list()
       local root_dir = list.config:get_root_dir()
       local current_file_path = vim.api.nvim_buf_get_name(0)
 
@@ -424,7 +428,12 @@ M.statusline = {
         for _, client in ipairs(vim.lsp.get_clients()) do
           if
             client.attached_buffers[vim.api.nvim_get_current_buf()]
-            and (client.name ~= "null-ls" and client.name ~= "copilot" and client.name ~= "GitHub Copilot" and client.name ~= "golangci_lint_ls")
+            and (
+              client.name ~= "null-ls"
+              and client.name ~= "copilot"
+              and client.name ~= "GitHub Copilot"
+              and client.name ~= "golangci_lint_ls"
+            )
           then
             count = count + 1
             local copilot = "%#CopilotHl# " .. require("copilot_status").status_string() .. " "

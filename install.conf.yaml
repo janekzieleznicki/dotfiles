@@ -6,8 +6,8 @@
 
 - link:
       ~/.config/alacritty/alacritty.toml:
-          path: alacritty.toml
-          create: false
+            path: alacritty.toml
+            create: true
       ~/.tmux.conf:
           path: tmux.conf
           create: false
@@ -21,16 +21,13 @@
           path: zshenv
           create: false
       ~/.zshrc:
-          path: zshrc
-          create: false
+            path: zshrc
+            create: false
+      ~/.oh-my-zsh:
+            path: modules/ohmyzsh
+            create: true
       ~/.config/nvim:
           path: nvim
-          create: true
-      ~/.oh-my-zsh:
-          path: modules/ohmyzsh
-          create: true
-      ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
-          path: modules/zsh-autosuggestions
           create: true
       ~/.fzf:
           path: modules/fzf
