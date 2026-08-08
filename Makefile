@@ -2,8 +2,9 @@
         verify-zsh verify-tmux verify-nvim verify-plugins verify-paths verify-omzp
 
 IMAGE := dotfiles-test:fedora
-MOUNT := -v $(CURDIR):/home/testuser/dotfiles
-RUN := podman run --rm --userns=keep-id -e TERM=xterm-256color $(MOUNT) -w /home/testuser/dotfiles $(IMAGE)
+MOUNT := -v $(CURDIR):/home/testuser/dotfiles:z
+NVIM_DATA := -v dotfiles-nvim-data:/home/testuser/.local/share/nvim:z
+RUN := podman run --rm --userns=keep-id -e TERM=xterm-256color $(MOUNT) $(NVIM_DATA) -w /home/testuser/dotfiles $(IMAGE)
 
 build:
 	podman build -t $(IMAGE) .
@@ -32,8 +33,9 @@ verify-tmux: build
 	$(RUN) /bin/bash -c "bash install && tmux new-session -d -s test && tmux source ~/.tmux.conf && echo 'TMUX: OK' && tmux -V && tmux kill-session"
 
 verify-nvim: build
-	@echo "=== Testing Neovim ==="
-	$(RUN) /bin/bash -c "bash install && nvim --headless -c 'qa!' && echo 'NVIM: OK' && nvim --version | head -1"
+	@echo "=== Testing Neovim (config loads, all plugins load, filetypes trigger) ==="
+	$(RUN) /bin/bash -c "bash install && \
+	  nvim --headless +'source ./nvim/test/verify.lua' 2>&1 | tail -60"
 
 verify-plugins: build
 	@echo "=== Testing plugin synchronization ==="

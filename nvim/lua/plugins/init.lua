@@ -19,57 +19,12 @@ return {
               }
             end, 100)
           end)
-          vim.api.nvim_create_user_command("MasonInstallAll", function()
-            vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
-          end, {})
           require "configs.lspconfig"
         end,
       },
       "artemave/workspace-diagnostics.nvim",
       "jubnzv/virtual-types.nvim",
       "williamboman/mason-lspconfig.nvim",
-      {
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
-        opts = {
-          auto_update = true,
-          run_on_start = true,
-          ensure_installed = {
-            "ansible-language-server",
-            "ansible-lint",
-            "bash-language-server",
-            "clang-format",
-            "clangd",
-            "codelldb",
-            "delve",
-            "dockerfile-language-server",
-            "golangci-lint",
-            "golangci-lint-langserver",
-            "gofumpt",
-            "goimports",
-            "gomodifytags",
-            "gopls",
-            "gotests",
-            "iferr",
-            "impl",
-            "json-lsp",
-            "lua-language-server",
-            "marksman",
-            "prettier",
-            "rust-analyzer",
-            "shellcheck",
-            "shfmt",
-            "stylua",
-            "terraform-ls",
-            "tflint",
-            "yaml-language-server",
-            "yamlfmt",
-            "yamllint",
-          },
-        },
-        cmd = "MasonToolsUpdate",
-        event = "BufReadPre",
-        dependencies = "williamboman/mason.nvim",
-      },
     },
     config = function() end,
   },
@@ -150,6 +105,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    version = "v0.10.0",
     lazy = false,
     build = ":TSUpdate",
     dependencies = {
@@ -162,9 +118,11 @@ return {
     },
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
-      require("nvim-treesitter.configs").setup(overrides.treesitter)
     end,
-    config = function() end,
+    opts = overrides.treesitter,
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
   },
   {
     "filNaj/tree-setter",
@@ -178,7 +136,6 @@ return {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "antosha417/nvim-lsp-file-operations" },
     cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeClose", "NvimTreeFindFile", "NvimTreeFocus" },
-    event = "VimEnter",
     opts = function()
       return require "configs.tree"
     end,
@@ -452,21 +409,15 @@ return {
   {
     "echasnovski/mini.surround",
     event = { "ModeChanged" },
-    ops = {},
+    opts = {},
+    config = function(_, opts)
+      require("mini.surround").setup(opts)
+    end,
   },
   {
     "mfussenegger/nvim-dap",
     cmd = { "DapContinue", "DapStepOver", "DapStepInto", "DapStepOut", "DapToggleBreakpoint" },
     dependencies = {
-      {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = "williamboman/mason.nvim",
-        opts = {
-          automatic_installation = true,
-          ensure_installed = { "codelldb", "delve" },
-          handlers = {},
-        },
-      },
       {
         "theHamsta/nvim-dap-virtual-text",
         config = function()

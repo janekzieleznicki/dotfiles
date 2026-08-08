@@ -424,6 +424,12 @@ M.statusline = {
 
     lsp_status = function()
       local count = 0
+      -- copilot.lua is optional; show its status only when installed.
+      local ok_copilot, copilot_status = pcall(require, "copilot_status")
+      local copilot = ""
+      if ok_copilot then
+        copilot = "%#CopilotHl# " .. copilot_status.status_string() .. " "
+      end
       if rawget(vim, "lsp") then
         for _, client in ipairs(vim.lsp.get_clients()) do
           if
@@ -436,7 +442,6 @@ M.statusline = {
             )
           then
             count = count + 1
-            local copilot = "%#CopilotHl# " .. require("copilot_status").status_string() .. " "
             local lsp_name = client.name
             if client.name == "typescript-tools" then
               lsp_name = "typescript"

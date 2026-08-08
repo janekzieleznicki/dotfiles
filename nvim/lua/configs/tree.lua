@@ -1,4 +1,4 @@
-local UserDecorator = require "nvim-tree.renderer.decorator.user"
+local UserDecorator = require("nvim-tree.api").Decorator
 
 ---A string with one or more highlight groups applied to it
 ---@class (exact) HighlightedString
@@ -14,7 +14,7 @@ local UserDecoratorExample = UserDecorator:extend()
 function UserDecoratorExample:new()
   UserDecoratorExample.super.new(self, {
     enabled = true,
-    hl_pos = "name",
+    highlight_range = "name",
     icon_placement = "right_align",
   })
 
@@ -28,7 +28,7 @@ end
 
 ---@param node Node
 ---@return HighlightedString[]|nil icons
-function UserDecoratorExample:calculate_icons(node)
+function UserDecoratorExample:icons(node)
   if node.name == "example" then
     return { self.my_icon }
   else
@@ -38,7 +38,7 @@ end
 
 ---@param node Node
 ---@return string|nil group
-function UserDecoratorExample:calculate_highlight(node)
+function UserDecoratorExample:highlight_group(node)
   if node.name == "example" then
     return "ExampleHighlight"
   else
@@ -229,19 +229,15 @@ return {
   sync_root_with_cwd = true,
   renderer = {
     decorators = {
-      {
-        {
-          "Git",
-          "Open",
-          "Hidden",
-          "Modified",
-          "Bookmark",
-          "Diagnostics",
-          "Copied",
-          UserDecoratorExample,
-          "Cut",
-        },
-      },
+      "Git",
+      "Open",
+      "Hidden",
+      "Modified",
+      "Bookmark",
+      "Diagnostics",
+      "Copied",
+      UserDecoratorExample,
+      "Cut",
     },
     highlight_opened_files = "name",
     highlight_git = true,

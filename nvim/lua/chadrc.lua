@@ -32,37 +32,7 @@ M.nvdash = core.nvdash
 
 M.lsp = { signature = false }
 
-M.mason = {
-  pkgs = {
-    "ansible-language-server",
-    "ansible-lint",
-    "bash-language-server",
-    "clang-format",
-    "clangd",
-    "codelldb",
-    "delve",
-    "dockerfile-language-server",
-    "golangci-lint",
-    "golangci-lint-langserver",
-    "gofumpt",
-    "goimports",
-    "gopls",
-    "json-lsp",
-    "lua-language-server",
-    "marksman",
-    "prettier",
-    "rust-analyzer",
-    "shellcheck",
-    "shfmt",
-    "stylua",
-    "taplo",
-    "terraform-ls",
-    "tflint",
-    "yaml-language-server",
-    "yamlfmt",
-    "yamllint",
-  },
-}
+M.mason = {}
 
 M.base46 = {
   integrations = {
