@@ -11,13 +11,13 @@ autoload -Uz compinit
 compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
 
 zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-syntax-highlighting
+=
 zinit light Aloxaf/fzf-tab
 
-for plugin in git npm dotenv docker docker-compose rust fzf vagrant terraform ansible dnf pip; do
+for plugin in git npm dotenv docker docker-compose rust vagrant terraform ansible dnf pip; do
   zinit snippet "OMZP::$plugin"
 done
-
+zinit light zsh-users/zsh-syntax-highlighting
 setopt promptsubst
 
 if [[ -n "$DISPLAY" || -n "$WAYLAND_DISPLAY" ]]; then
@@ -29,7 +29,7 @@ fi
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always $realpath 2>/dev/null'
-zstyle ':omz:update' mode disabled
+=
 
 [[ -r "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
 
@@ -59,4 +59,5 @@ OCI_COMPLETION="$HOME/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli
 [[ -r "$OCI_COMPLETION" ]] && source "$OCI_COMPLETION"
 unset OCI_COMPLETION
 
+-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

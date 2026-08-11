@@ -23,9 +23,6 @@
       ~/.zshrc:
             path: zshrc
             create: false
-      ~/.oh-my-zsh:
-            path: modules/ohmyzsh
-            create: true
       ~/.config/nvim:
           path: nvim
           create: true

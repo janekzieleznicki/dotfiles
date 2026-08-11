@@ -14,7 +14,7 @@ shell:
 	podman run --rm -it \
 	  --userns=keep-id \
 	  -e TERM=xterm-256color \
-	  -v $(CURDIR):/home/testuser/dotfiles \
+	  -v $(CURDIR):/home/testuser/dotfiles:z \
 	  -w /home/testuser/dotfiles \
 	  $(IMAGE) \
 	  /bin/bash -c "bash install && exec zsh -i"
@@ -46,8 +46,7 @@ verify-paths: build
 	$(RUN) /bin/bash -c "bash install && zsh -ic 'echo PATH=\${path}'"
 
 verify-omzp: build
-	@echo "=== Testing OMZP plugins ==="
-	$(RUN) /bin/bash -c "bash install && ls ~/.oh-my-zsh/plugins/ | head -20 && echo 'OMZP: OK'"
+	$(RUN) /bin/bash -c "bash install && ls ~/.local/share/zinit/snippets/OMZP::* | head -20 && echo 'OMZP: OK'"
 
 # Quick smoke test (single container)
 smoke: build
