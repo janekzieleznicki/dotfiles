@@ -4,15 +4,6 @@
 [submodule "modules/fzf"]
 	path = modules/fzf
 	url = https://github.com/junegunn/fzf.git
-[submodule "modules/antigen"]
-	path = modules/antigen
-	url = https://github.com/zsh-users/antigen.git
-[submodule "modules/ohmyzsh"]
-	path = modules/ohmyzsh
-	url = https://github.com/ohmyzsh/ohmyzsh.git
-[submodule "modules/zsh-autosuggestions"]
-	path = modules/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "modules/tpm"]
 	path = modules/tpm
 	url = https://github.com/tmux-plugins/tpm
