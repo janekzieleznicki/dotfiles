@@ -352,10 +352,11 @@ M.statusline = {
           local icon_hl = ft_icon_hl or "DevIconDefault"
           local hl_fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(icon_hl)), "fg")
           local hl_bg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID "StText"), "bg")
-          vim.api.nvim_set_hl(0, "St_" .. icon_hl, { fg = hl_fg, bg = hl_bg })
-
-          if string.find(filename, "toggleterm") then
-            filename = '%{&ft == "toggleterm" ? " Terminal (".b:toggle_number.") " : ""}'
+          local function is_hex_color(c)
+            return type(c) == "string" and c:match("^#%x%x%x%x%x%x$")
+          end
+          if is_hex_color(hl_fg) and is_hex_color(hl_bg) then
+            vim.api.nvim_set_hl(0, "St_" .. icon_hl, { fg = hl_fg, bg = hl_bg })
           end
           if string.find(filename, "NvimTree") then
             filename = '%{&ft == "NvimTree" ? " File Explorer " : ""}'

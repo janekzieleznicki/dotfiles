@@ -1,12 +1,13 @@
 FROM fedora:latest
 
+ARG TARGETARCH
+
 RUN dnf install -y dnf-plugins-core && \
     dnf update -y && \
     dnf install -y \
       git \
       zsh \
       tmux \
-      neovim \
       fzf \
       zoxide \
       eza \
@@ -35,19 +36,37 @@ RUN dnf install -y dnf-plugins-core && \
       bat \
       clang \
       clang-tools-extra \
+      luarocks \
+      lua-devel \
       && dnf clean all
 
-# Optional: Uncomment to enable COPR neovim-nightly if needed
-# RUN dnf copr enable -y uglyegg/neovim && dnf update -y neovim
+# Pobranie oficjalnego wydania Neovim pod właściwą architekturę
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        NVIM_ARCH="nvim-linux-arm64"; \
+    else \
+        NVIM_ARCH="nvim-linux-x86_64"; \
+    fi && \
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/${NVIM_ARCH}.tar.gz && \
+    tar -C /opt -xzf ${NVIM_ARCH}.tar.gz && \
+    ln -s /opt/${NVIM_ARCH}/bin/nvim /usr/local/bin/nvim && \
+    rm ${NVIM_ARCH}.tar.gz
 
 ARG USERNAME=testuser
 ARG USER_UID=1000
 ARG USER_GID=1000
+
+# Ustawienie zsh jako domyślnej powłoki użytkownika (-s /bin/zsh)
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m -s /bin/zsh $USERNAME \
     && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
+ENV TERM=xterm-256color
+ENV SHELL=/bin/zsh
+
 RUN mkdir -p ~/.cache/zsh ~/.local/share/nvim ~/.config/nvim ~/.config/tmux/plugins
+
+CMD ["/bin/zsh"]
+

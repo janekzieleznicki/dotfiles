@@ -91,11 +91,11 @@ end, {})
 
 -- Command to toggle diagnostics
 create_cmd("DiagnosticsToggle", function()
-  local current_value = vim.diagnostic.is_disabled()
+  local current_value = not vim.diagnostic.is_enabled()
   if current_value then
-    vim.diagnostic.enable()
+    vim.diagnostic.enable(true)
   else
-    vim.diagnostic.disable()
+    vim.diagnostic.enable(false)
   end
 end, {})
 

@@ -13,7 +13,6 @@ shell:
 	@echo "=== Starting interactive shell with dotfiles installed ==="
 	podman run --rm -it \
 	  --userns=keep-id \
-	  -e TERM=xterm-256color \
 	  -v $(CURDIR):/home/testuser/dotfiles:z \
 	  -w /home/testuser/dotfiles \
 	  $(IMAGE) \

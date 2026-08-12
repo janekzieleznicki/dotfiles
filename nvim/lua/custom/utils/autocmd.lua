@@ -201,7 +201,7 @@ autocmd("BufWritePre", {
 autocmd({ "BufNewFile", "BufRead" }, {
   pattern = { "**/node_modules/**", "node_modules", "/node_modules/*" },
   callback = function()
-    vim.diagnostic.disable(0)
+    vim.diagnostic.enable(false, { buf_nr = 0 })
   end,
 })
 
@@ -209,33 +209,6 @@ autocmd("BufEnter", {
   desc = "Close nvim if NvimTree is only running buffer",
   command = [[if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif]],
 })
-
-autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("TS_add_missing_imports", { clear = true }),
-  desc = "TS_add_missing_imports",
-  pattern = { "*.ts" },
-  callback = function()
-    local params = vim.lsp.util.make_range_params()
-    params.context = {
-      only = { "source.addMissingImports.ts" },
-    }
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
-    for _, res in pairs(result or {}) do
-      for _, r in pairs(res.result or {}) do
-        if r.kind == "source.addMissingImports.ts" then
-          vim.lsp.buf.code_action {
-            apply = true,
-            context = {
-              only = { "source.addMissingImports.ts" },
-            },
-          }
-          vim.cmd "write"
-        end
-      end
-    end
-  end,
-})
-
 -- Define the VimEnter autocmd
 autocmd("VimEnter", {
   callback = function()
@@ -315,21 +288,6 @@ autocmd("BufWritePost", {
     end
   end,
 })
-
-autocmd({ "BufRead" }, {
-  desc = "Load git-conflict.nvim only when a git file is opened",
-  group = vim.api.nvim_create_augroup("GitConflictLazyLoad", { clear = true }),
-  callback = function()
-    vim.fn.system("git -C " .. '"' .. vim.fn.expand "%:p:h" .. '"' .. " rev-parse")
-    if vim.v.shell_error == 0 then
-      vim.api.nvim_del_augroup_by_name "GitConflictLazyLoad"
-      vim.schedule(function()
-        require("lazy").load { plugins = { "git-conflict.nvim" } }
-      end)
-    end
-  end,
-})
-
 autocmd("TextYankPost", {
   desc = "Highlight on yank",
   command = "silent! lua vim.hl.on_yank({higroup='YankVisual', timeout=200})",
@@ -339,13 +297,13 @@ autocmd("TextYankPost", {
 autocmd("ModeChanged", {
   group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
   pattern = { "n:i", "n:v", "i:v" },
-  command = "lua vim.diagnostic.disable()",
+  callback = function() vim.diagnostic.enable(false, { buf_nr = 0 }) end,
 })
 
 autocmd("ModeChanged", {
   group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
   pattern = "i:n",
-  command = "lua vim.diagnostic.enable()",
+  callback = function() vim.diagnostic.enable(true, { buf_nr = 0 }) end,
 })
 
 -- Show cursor line only in active window
@@ -370,7 +328,7 @@ autocmd("BufWritePre", {
 autocmd({ "BufReadPost" }, {
   pattern = { "*" },
   callback = function()
-    vim.api.nvim_exec('silent! normal! g`"zv', false)
+    vim.cmd('silent! normal! g`"zv')
   end,
 })
 
@@ -419,21 +377,8 @@ autocmd("FileType", {
 autocmd({ "BufRead", "BufNewFile" }, {
   desc = "Disable diagnostics in node_modules",
   pattern = "*/node_modules/*",
-  command = "lua vim.diagnostic.disable(0)",
+  callback = function() vim.diagnostic.enable(false, { buf_nr = 0 }) end,
 })
-
-autocmd("BufWritePre", {
-  callback = function(event)
-    local client = vim.lsp.get_clients({ bufnr = event.buf, name = "eslint" })[1]
-    if client then
-      local diag = vim.diagnostic.get(event.buf, { namespace = vim.lsp.diagnostic.get_namespace(client.id) })
-      if #diag > 0 then
-        vim.cmd "EslintFixAll"
-      end
-    end
-  end,
-})
-
 -- Nvimtree open file on creation
 local function open_file_created()
   require("nvim-tree.api").events.subscribe("FileCreated", function(file)
@@ -528,8 +473,6 @@ vim.api.nvim_create_autocmd("FileType", {
     "lazy",
   },
   callback = function()
-    require("ufo").detach()
-    vim.opt_local.foldenable = false
   end,
 })
 
@@ -555,19 +498,6 @@ vim.api.nvim_create_autocmd("OptionSet", {
     end
   end,
 })
-
-autocmd({ "BufEnter", "BufNewFile" }, {
-  callback = function()
-    if vim.bo.filetype == "markdown" then
-      -- override ufo method
-      vim.opt_local.foldexpr = "NestedMarkdownFolds()"
-    else
-      -- revert to ufo method
-      vim.opt_local.foldexpr = ""
-    end
-  end,
-})
-
 autocmd({ "tabnew" }, {
   callback = function(args)
     vim.schedule(function()

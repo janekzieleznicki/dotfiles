@@ -105,7 +105,6 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    version = "v0.10.0",
     lazy = false,
     build = ":TSUpdate",
     dependencies = {
@@ -118,10 +117,6 @@ return {
     },
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
-    end,
-    opts = overrides.treesitter,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
     end,
   },
   {
@@ -182,7 +177,6 @@ return {
   },
   {
     "hrsh7th/nvim-cmp",
-    url = "https://github.com/iguanacucumber/magazine.nvim",
     opts = cmp_opt.cmp,
     dependencies = {
       "ray-x/cmp-treesitter",

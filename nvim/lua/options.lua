@@ -104,8 +104,8 @@ opt.smoothscroll = true
 if vim.env.TMUX then
   vim.opt.laststatus = 0
 else
-  vim.opt.laststatus = 3
 end
+vim.o.winborder = "rounded"
 
 if g.neovide then
   opt.guifont = "Hack Nerd Font:h12"

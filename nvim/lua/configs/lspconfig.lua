@@ -212,4 +212,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-require("lspconfig.ui.windows").default_options.border = "rounded"
