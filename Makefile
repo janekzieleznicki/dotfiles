@@ -12,11 +12,11 @@ RUN_FULL := podman run --rm -e TERM=xterm-256color $(NVIM_DATA) -w /home/testuse
 
 # Buduje etap testowy
 build-test:
-	podman build --pull=always --target test -t $(IMAGE_TEST) .
+	podman build --target test -t $(IMAGE_TEST) .
 
 # Buduje pełny, gotowy obraz ze skopiowanymi dotfiles i pobranymi wtyczkami
 build-full:
-	podman build --pull=always --target full -t $(IMAGE_FULL) .
+	podman build --target full -t $(IMAGE_FULL) .
 
 build: build-test build-full
 
