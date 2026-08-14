@@ -107,12 +107,10 @@ end)
 ------------------------------------------------------------------------
 -- 2. Ensure every plugin is installed at its pinned/version commit.
 ------------------------------------------------------------------------
--- Run a synchronous `Lazy! sync` so all plugins are present at the correct
--- version before we force-load them. `:Lazy! sync` blocks until install
--- completes, so the force-load below sees a settled plugin tree.
--- (The lockfile is gitignored/untracked; `version` in each spec is the pin
---  source of truth, and sync resolves it.)
-vim.cmd("Lazy! sync")
+local lockfile = vim.fn.stdpath("data") .. "/lazy/lazy-lock.json"
+if vim.fn.filereadable(lockfile) == 0 then
+  vim.cmd("Lazy! sync")
+end
 -- Lazy may have scheduled UI; let the dust settle.
 vim.wait(500, function() end, 20, false)
 

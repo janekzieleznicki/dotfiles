@@ -8,13 +8,15 @@ MOUNT := -v $(CURDIR):/home/testuser/dotfiles:z
 NVIM_DATA := -v dotfiles-nvim-data:/home/testuser/.local/share/nvim:z
 RUN := podman run --rm --userns=keep-id -e TERM=xterm-256color $(MOUNT) $(NVIM_DATA) -w /home/testuser/dotfiles $(IMAGE_TEST)
 
+RUN_FULL := podman run --rm -e TERM=xterm-256color $(NVIM_DATA) -w /home/testuser $(IMAGE_FULL)
+
 # Buduje etap testowy
 build-test:
-	podman build --target test -t $(IMAGE_TEST) .
+	podman build --pull=always --target test -t $(IMAGE_TEST) .
 
 # Buduje pełny, gotowy obraz ze skopiowanymi dotfiles i pobranymi wtyczkami
 build-full:
-	podman build --target full -t $(IMAGE_FULL) .
+	podman build --pull=always --target full -t $(IMAGE_FULL) .
 
 build: build-test build-full
 

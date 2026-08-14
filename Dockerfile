@@ -6,8 +6,7 @@ FROM fedora:latest AS test
 ARG TARGETARCH
 
 RUN dnf install -y dnf-plugins-core && \
-    dnf update -y && \
-    dnf install -y \
+    dnf --refresh install -y \
     git \
     zsh \
     tmux \
@@ -83,8 +82,8 @@ WORKDIR /home/testuser/dotfiles
 
 # Rozdzielone instrukcje nvim, aby Mason wymusił załadowanie po zsynchronizowaniu wtyczek przez Lazy
 RUN bash install && \
-    nvim --headless -c 'Lazy! sync' -c 'qa!' || true && \
-    nvim --headless -c 'MasonInstallAll' -c 'qa!' || true
+    nvim --headless -c 'Lazy! sync' -c 'qa!' && \
+    nvim --headless -c 'MasonToolsInstall' -c 'qa!'
 
 WORKDIR /home/testuser
 

@@ -29,6 +29,26 @@ return {
     config = function() end,
   },
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "lua-language-server", "gopls", "rust-analyzer", "pyright",
+        "typescript-language-server", "clangd",
+        "stylua", "gofumpt", "goimports", "ruff", "prettier", "shfmt",
+        "codelldb", "delve",
+      },
+      auto_update = false,
+      run_on_start = false,
+    },
+  },
+  {
+    "echasnovski/mini.test",
+    version = "*",
+    lazy = true,
+    cond = function() return vim.env.CI or vim.env.TEST_MODE end,
+  },
+  {
     "folke/which-key.nvim",
     enabled = true,
   },
