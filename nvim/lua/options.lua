@@ -104,6 +104,7 @@ opt.smoothscroll = true
 if vim.env.TMUX then
   vim.opt.laststatus = 0
 else
+  vim.opt.laststatus = 3
 end
 vim.o.winborder = "rounded"
 

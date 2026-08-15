@@ -1,0 +1,12 @@
+-- Compatibility shim.
+--
+-- base46 v3.0 (the version pinned in lazy-lock.json) consolidated the four
+-- catppuccin flavors into a single `themes/catppuccin.lua` that already uses the
+-- Frappe palette. The chadrc still references the old v2.x flavor name
+-- `catppuccin-frappe`, which base46 v3.0 no longer ships as its own file, so
+-- `require("base46").compile()` fails with "No such theme!" on a fresh install
+-- (and Lazy's base46 `build` hook re-runs `load_all_highlights()`).
+--
+-- Re-export the consolidated theme so the flavor name resolves without
+-- changing the palette or touching the lockfile.
+return require("base46.themes.catppuccin")

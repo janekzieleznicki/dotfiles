@@ -4,7 +4,9 @@ local mini_path = data_dir .. "/lazy/mini.test"
 if vim.fn.isdirectory(mini_path) == 0 then
   mini_path = data_dir .. "/lazy/mini.nvim"
 end
-
+print("DEBUG: data_dir = " .. data_dir)
+print("DEBUG: mini_path = " .. mini_path)
+print("DEBUG: mini_path isdir = " .. tostring(vim.fn.isdirectory(mini_path)))
 vim.opt.rtp:prepend(mini_path)
 
 -- 2. Weryfikacja obecności modułu mini.test

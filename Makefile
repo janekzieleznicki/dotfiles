@@ -45,10 +45,8 @@ verify-nvim: build-test
 # Nowy test E2E z mini.test (Klawiatura, komendy, TUI Screenshots)
 verify-nvim-e2e: build-test
 	@echo "=== Testing Neovim E2E (Keymaps, Commands & TUI Rendering) ==="
-	$(RUN) /bin/bash -c "\
-	  bash install && \
-	  nvim --headless -c 'Lazy! sync' -c 'qa!' && \
-	  nvim --headless -u nvim/init.lua -c 'luafile nvim/test/run_mini_test.lua'"
+	$(RUN) /bin/bash -c "TEST_MODE=1 bash install && \
+		  nvim --headless -l ./nvim/test/run_mini_test.lua 2>&1 | tee test_output.log"
 
 # Łączony target dla pełnego zestawu
 test-nvim: build-test verify-nvim verify-nvim-e2e

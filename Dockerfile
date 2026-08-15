@@ -30,6 +30,7 @@ RUN dnf install -y dnf-plugins-core && \
     tar \
     gzip \
     which \
+    xclip \
     sudo \
     findutils \
     procps-ng \
