@@ -26,7 +26,7 @@ shell: build-full
 
 # Zestaw testów wykonuje się na etapie 'test' z zamontowanym kodem źródłowym
 test: build-test verify-zsh verify-tmux test-nvim verify-plugins verify-paths verify-omzp
-	@echo "=== All tests passed! ==="
+	@echo "=== All Tests passed! ==="
 
 verify-zsh: build-test
 	@echo "=== Testing ZSH configuration ==="

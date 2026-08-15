@@ -83,8 +83,8 @@ WORKDIR /home/testuser/dotfiles
 
 # Rozdzielone instrukcje nvim, aby Mason wymusił załadowanie po zsynchronizowaniu wtyczek przez Lazy
 RUN bash install && \
-    nvim --headless -c 'Lazy! sync' -c 'qa!' && \
-    nvim --headless -c 'MasonToolsInstall' -c 'qa!'
+    nvim --headless -c 'Lazy! restore' -c 'qa!' && \
+    nvim --headless -c 'MasonToolsInstallSync' -c 'qa!'
 
 WORKDIR /home/testuser
 
