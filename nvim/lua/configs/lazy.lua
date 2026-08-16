@@ -1,4 +1,5 @@
 return {
+  lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json",
   defaults = { lazy = true },
   install = { colorscheme = { "nvchad" } },
 

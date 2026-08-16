@@ -1,6 +1,8 @@
 ---@diagnostic disable: undefined-field
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
-vim.g.mapleader = " "
+vim.g.base46_cache = vim.fn.stdpath("data") .. "/base46/"
+local config_dir = vim.fn.fnamemodify(vim.fn.expand('<sfile>'), ':h')
+vim.opt.runtimepath:prepend(config_dir)
+package.path = package.path .. ";" .. config_dir .. "/lua/?.lua;" .. config_dir .. "/lua/?/init.lua"
 vim.g.maplocalleader = " "
 
 -- bootstrap lazy and all plugins
@@ -32,35 +34,37 @@ require("lazy").setup({
     lazy = false,
     branch = "v2.5",
     import = "nvchad.plugins",
-    config = function()
-      require "options"
-    end,
   },
 
-  { import = "plugins" },
+  -- { import = "plugins" },
 }, lazy_config)
 
 -- load theme
-for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
-  dofile(vim.g.base46_cache .. v)
-end
+dofile(vim.g.base46_cache .. "defaults.lua")
+dofile(vim.g.base46_cache .. "statusline.lua")
 
--- Re-activate providers
-for _, v in ipairs { "python3_provider", "node_provider" } do
-  vim.g["loaded_" .. v] = nil
-  vim.cmd("runtime " .. v)
-end
+-- Re-activate python provider only
+vim.g["loaded_python3_provider"] = nil
+vim.cmd("runtime python3_provider")
 
+-- load options
+require "options"
+
+-- load autocmds (NvChad)
 require "nvchad.autocmds"
 
+-- load custom autocmds
+require "custom.utils.autocmd"
+
+-- load usercmds
+require "custom.utils.usercmd"
+
+-- load mappings
 vim.schedule(function()
   require "mappings"
 end)
 
--- @Custom
-require "custom.utils.usercmd"
-require "custom.utils.autocmd"
-
+-- sign defines
 vim.fn.sign_define("DapBreakpoint", { text = "󰙧", numhl = "DapBreakpoint", texthl = "DapBreakpoint" })
 vim.fn.sign_define("DapLogPoint", { text = "", numhl = "DapLogPoint", texthl = "DapLogPoint" })
 vim.fn.sign_define("DapStopped", { text = "", numhl = "DapStopped", texthl = "DapStopped" })

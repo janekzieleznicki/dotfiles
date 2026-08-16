@@ -7,8 +7,6 @@ local highlights = require "custom.highlights"
 M.ui = {
   statusline = core.statusline,
   tabufline = core.tabufline,
-  hl_override = highlights.override,
-  hl_add = highlights.add,
 }
 
 M.nvdash = core.nvdash
@@ -42,7 +40,6 @@ M.base46 = {
   },
   hl_override = highlights.override,
   hl_add = highlights.add,
-  nvdash = core.nvdash,
 }
 
 return M

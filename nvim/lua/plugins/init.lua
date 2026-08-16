@@ -128,7 +128,6 @@ return {
     lazy = false,
     build = ":TSUpdate",
     dependencies = {
-      "windwp/nvim-ts-autotag",
       "danymat/neogen",
       {
         "folke/ts-comments.nvim",
