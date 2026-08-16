@@ -40,3 +40,7 @@ export PATH=${HOME}/.local/bin:${HOME}/go/bin:${HOME}/.cargo/bin:${PATH}
 [[ -e "${HOME}/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "${HOME}/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
 
 eval "$(zoxide init --cmd cd zsh)"
+if [[ -f "$HOME/.tokens.env" ]]; then
+  source "$HOME/.tokens.env"
+fi
+
