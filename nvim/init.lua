@@ -36,22 +36,15 @@ require("lazy").setup({
     import = "nvchad.plugins",
   },
 
-  -- { import = "plugins" },
+  { import = "plugins" },
 }, lazy_config)
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults.lua")
 dofile(vim.g.base46_cache .. "statusline.lua")
 
--- Re-activate python provider only
-vim.g["loaded_python3_provider"] = nil
-vim.cmd("runtime python3_provider")
-
 -- load options
 require "options"
-
--- load autocmds (NvChad)
-require "nvchad.autocmds"
 
 -- load custom autocmds
 require "custom.utils.autocmd"
