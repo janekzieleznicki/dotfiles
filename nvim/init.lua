@@ -40,8 +40,8 @@ require("lazy").setup({
 }, lazy_config)
 
 -- load theme
-dofile(vim.g.base46_cache .. "defaults.lua")
-dofile(vim.g.base46_cache .. "statusline.lua")
+dofile(vim.g.base46_cache .. "defaults")
+dofile(vim.g.base46_cache .. "statusline")
 
 -- load options
 require "options"

@@ -10,26 +10,39 @@ return {
         opts = overrides.mason,
         config = function(_, opts)
           require("mason").setup(opts)
-          local mr = require "mason-registry"
-          mr:on("package:install:success", function()
-            vim.defer_fn(function()
-              require("lazy.core.handler.event").trigger {
-                event = "FileType",
-                buf = vim.api.nvim_get_current_buf(),
-              }
-            end, 100)
-          end)
           require "configs.lspconfig"
+        end,
+      },
+      {
+        "williamboman/mason-lspconfig.nvim",
+        opts = {
+          ensure_installed = {
+            "lua_ls", "bashls", "clangd", "dockerls", "gopls", "jsonls",
+            "marksman", "terraformls", "yamlls", "ansiblels",
+          },
+          automatic_installation = false,
+        },
+        config = function(_, opts)
+          require("mason-lspconfig").setup(opts)
         end,
       },
       "artemave/workspace-diagnostics.nvim",
       "jubnzv/virtual-types.nvim",
-      "williamboman/mason-lspconfig.nvim",
     },
-    config = function() end,
+    config = function()
+      require "configs.lspconfig"
+    end,
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
+    cmd = {
+      "MasonToolsInstall",
+      "MasonToolsInstallSync",
+      "MasonToolsInstall",
+      "MasonToolsUpdate",
+      "MasonToolsUpdateSync",
+      "MasonToolsClean",
+    },
     dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
@@ -41,12 +54,6 @@ return {
       auto_update = false,
       run_on_start = false,
     },
-  },
-  {
-    "echasnovski/mini.test",
-    version = "*",
-    lazy = true,
-    cond = function() return vim.env.CI or vim.env.TEST_MODE end,
   },
   {
     "folke/which-key.nvim",
@@ -97,7 +104,7 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     opts = function()
-      require "nvchad.configs.gitsigns"
+      return require "nvchad.configs.gitsigns"
     end,
     config = function(_, opts)
       require("scrollbar.handlers.gitsigns").setup()
@@ -125,6 +132,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "master",
     lazy = false,
     build = ":TSUpdate",
     dependencies = {
@@ -155,12 +163,7 @@ return {
     end,
     config = function(_, opts)
       require("nvim-tree").setup(opts)
-      require("nvim-tree.diagnostics").update_lsp()
     end,
-  },
-  {
-    "NvChad/nvim-colorizer.lua",
-    enabled = false,
   },
   {
     "sphamba/smear-cursor.nvim",
@@ -219,28 +222,6 @@ return {
     config = function(_, opts)
       ---@diagnostic disable-next-line: different-requires
       local cmp = require "cmp"
-
-      -- Override the documentation handler to remove the redundant detail section.
-      ---@diagnostic disable-next-line: duplicate-set-field
-      require("cmp.entry").get_documentation = function(self)
-        local item = self.completion_item
-
-        if item.documentation then
-          return vim.lsp.util.convert_input_to_markdown_lines(item.documentation)
-        end
-
-        --   -- Use the item's detail as a fallback if there's no documentation.
-        --   if item.detail then
-        --     local ft = self.context.filetype
-        --     local dot_index = string.find(ft, "%.")
-        --     if dot_index ~= nil then
-        --       ft = string.sub(ft, 0, dot_index - 1)
-        --     end
-        --     return (vim.split(("```%s\n%s```"):format(ft, vim.trim(item.detail)), "\n"))
-        --   end
-
-        --   return {}
-      end
 
       local cmp_autopairs = require "nvim-autopairs.completion.cmp"
       cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
