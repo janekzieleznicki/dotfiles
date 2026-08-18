@@ -9,7 +9,7 @@ luasnip.filetype_extend("javascriptreact", { "react", "javascript", "html" })
 luasnip.filetype_extend("vue", { "html" })
 
 require("luasnip/loaders/from_vscode").lazy_load()
-require("luasnip.loaders.from_lua").load { paths = "nvim/lua/custom/luasnip" }
+require("luasnip.loaders.from_lua").load { paths = vim.fn.stdpath("config") .. "/lua/custom/luasnip" }
 
 local types = require "luasnip.util.types"
 
