@@ -1,51 +1,3 @@
-local UserDecorator = require("nvim-tree.api").Decorator
-
----A string with one or more highlight groups applied to it
----@class (exact) HighlightedString
----@field str string
----@field hl string[] highlight groups applied in order
-
----Custom user decorators must inherit from UserDecorator
----@class (exact) UserDecoratorExample: UserDecorator
----@field private my_icon HighlightedString
-local UserDecoratorExample = UserDecorator:extend()
-
----Constructor will be called once per tree render, with no arguments.
-function UserDecoratorExample:new()
-  UserDecoratorExample.super.new(self, {
-    enabled = true,
-    highlight_range = "name",
-    icon_placement = "right_align",
-  })
-
-  -- create your icon once, for convenience
-  self.my_icon = { str = "E", hl = { "ExampleIcon" } }
-
-  -- Define the icon sign only once
-  -- Only needed if you are using icon_placement = "signcolumn"
-  -- self:define_sign(self.my_icon)
-end
-
----@param node Node
----@return HighlightedString[]|nil icons
-function UserDecoratorExample:icons(node)
-  if node.name == "example" then
-    return { self.my_icon }
-  else
-    return nil
-  end
-end
-
----@param node Node
----@return string|nil group
-function UserDecoratorExample:highlight_group(node)
-  if node.name == "example" then
-    return "ExampleHighlight"
-  else
-    return nil
-  end
-end
-
 local function on_attach(bufnr)
   local api = require "nvim-tree.api"
   local lib = require "nvim-tree.lib"
@@ -236,7 +188,6 @@ return {
       "Bookmark",
       "Diagnostics",
       "Copied",
-      UserDecoratorExample,
       "Cut",
     },
     highlight_opened_files = "name",

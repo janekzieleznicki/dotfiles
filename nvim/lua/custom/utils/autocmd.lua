@@ -198,13 +198,6 @@ autocmd("BufWritePre", {
   end,
 })
 
-autocmd({ "BufNewFile", "BufRead" }, {
-  pattern = { "**/node_modules/**", "node_modules", "/node_modules/*" },
-  callback = function()
-    vim.diagnostic.enable(false, { buf_nr = 0 })
-  end,
-})
-
 autocmd("BufEnter", {
   desc = "Close nvim if NvimTree is only running buffer",
   command = [[if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif]],
@@ -264,18 +257,6 @@ autocmd("BufReadPost", {
   end,
 })
 
-autocmd("User", {
-  desc = "Git conflict popup",
-  pattern = "GitConflictDetected",
-  callback = function()
-    vim.notify("Conflict detected in " .. vim.fn.expand "<afile>")
-    vim.keymap.set("n", "cww", function()
-      engage.conflict_buster()
-      create_buffer_local_mappings()
-    end)
-  end,
-})
-
 autocmd("BufWritePost", {
   desc = "Reload NvimTree after writing the buffer",
   callback = function()
@@ -294,16 +275,16 @@ autocmd("TextYankPost", {
   group = augroup("YankHighlight", { clear = true }),
 })
 
+local diagnostic_group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true })
 autocmd("ModeChanged", {
-  group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
+  group = diagnostic_group,
   pattern = { "n:i", "n:v", "i:v" },
-  callback = function() vim.diagnostic.enable(false, { buf_nr = 0 }) end,
+  callback = function() vim.diagnostic.enable(false, { bufnr = 0 }) end,
 })
-
 autocmd("ModeChanged", {
-  group = vim.api.nvim_create_augroup("user_diagnostic", { clear = true }),
+  group = diagnostic_group,
   pattern = "i:n",
-  callback = function() vim.diagnostic.enable(true, { buf_nr = 0 }) end,
+  callback = function() vim.diagnostic.enable(true, { bufnr = 0 }) end,
 })
 
 -- Show cursor line only in active window
@@ -368,16 +349,17 @@ autocmd("FileType", {
     "grug-far-help",
   },
   group = augroup("WinCloseOnQDefinition", { clear = true }),
-  command = [[
-            nnoremap <buffer><silent> q :close<CR>
-            set nobuflisted
-        ]],
+  callback = function()
+    vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true, silent = true })
+    vim.bo.buflisted = false
+    vim.diagnostic.enable(false, { bufnr = 0 })
+  end,
 })
 
 autocmd({ "BufRead", "BufNewFile" }, {
   desc = "Disable diagnostics in node_modules",
   pattern = "*/node_modules/*",
-  callback = function() vim.diagnostic.enable(false, { buf_nr = 0 }) end,
+  callback = function() vim.diagnostic.enable(false, { bufnr = 0 }) end,
 })
 -- Nvimtree open file on creation
 local function open_file_created()
@@ -458,21 +440,6 @@ autocmd("BufHidden", {
 vim.api.nvim_create_autocmd("UIEnter", {
   callback = function()
     vim.cmd.clearjumps()
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "nvcheatsheet",
-    "dapui_watches",
-    "dap-repl",
-    "dapui_console",
-    "dapui_stacks",
-    "dapui_breakpoints",
-    "dapui_scopes",
-    "lazy",
-  },
-  callback = function()
   end,
 })
 

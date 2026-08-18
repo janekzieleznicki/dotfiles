@@ -46,8 +46,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
-        "lua-language-server", "gopls", "rust-analyzer", "pyright",
-        "typescript-language-server", "clangd",
+        "lua-language-server", "gopls", "rust-analyzer", "clangd",
         "stylua", "gofumpt", "goimports", "ruff", "prettier", "shfmt",
         "codelldb", "delve",
       },

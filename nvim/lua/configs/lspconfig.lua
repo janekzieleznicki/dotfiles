@@ -1,20 +1,14 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local defaults = require "nvchad.configs.lspconfig"
-local capabilities = vim.tbl_deep_extend(
-  "force",
-  vim.lsp.protocol.make_client_capabilities(),
-  require("cmp_nvim_lsp").default_capabilities(),
-  defaults.capabilities,
-  {
-    textDocument = {
-      foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-      },
+local capabilities = vim.tbl_deep_extend("force", defaults.capabilities, {
+  textDocument = {
+    foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true,
     },
-  }
-)
+  },
+})
 
 local function on_attach(client, bufnr)
   defaults.on_attach(client, bufnr)
@@ -211,4 +205,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
   end,
 })
-

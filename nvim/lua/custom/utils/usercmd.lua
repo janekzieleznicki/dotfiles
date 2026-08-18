@@ -69,11 +69,6 @@ create_cmd("Http", function()
   require('kulala').run()
 end, {})
 
---Open Peek
-create_cmd("TPeek", function()
-  require("peek").open()
-end, {})
-
 create_cmd("ToggleInlayHints", function()
   ---@diagnostic disable-next-line
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
@@ -155,11 +150,10 @@ end, {})
 
 -- Update nvim
 create_cmd("TUpdate", function()
-  require("lazy").load { plugins = { "mason.nvim", "nvim-treesitter" } }
-  vim.cmd "MasonUpdate"
+  require("lazy").load { plugins = { "mason.nvim", "mason-tool-installer.nvim", "nvim-treesitter" } }
+  vim.cmd "MasonToolsUpdate"
   vim.cmd "TSUpdate"
 end, {})
-
 
 create_cmd("GitOpen", function()
   -- Current file

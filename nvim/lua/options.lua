@@ -32,7 +32,6 @@ opt.smartindent = true
 opt.tabstop = 2
 opt.softtabstop = 2
 
-opt.fillchars = { eob = " " }
 opt.ignorecase = true
 opt.smartcase = true
 opt.mouse = "a"
@@ -91,21 +90,12 @@ vim.opt.fillchars = {
 -- opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- opt.foldexpr = ""
 
--- go to previous/next line with h,l,left arrow and right arrow when cursor reaches end/beginning of line
-opt.whichwrap:append "<>[]hl"
-
--- Copilot
-g.copilot_assume_mapped = true
-
 opt.emoji = false
-opt.cursorline = true
-opt.smoothscroll = true
 
 if vim.env.TMUX then
   vim.opt.laststatus = 0
-else
-  vim.opt.laststatus = 3
 end
+
 vim.o.winborder = "rounded"
 
 if g.neovide then
