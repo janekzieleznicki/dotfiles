@@ -12,7 +12,8 @@ M.ui = {
 M.nvdash = core.nvdash
 
 M.base46 = {
-  theme = "catppuccin-frappe",
+  transparency = true,
+  theme = "bearded-arc",
   integrations = {
     "blankline",
     "cmp",

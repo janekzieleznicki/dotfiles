@@ -20,11 +20,10 @@ done
 zinit light zsh-users/zsh-syntax-highlighting
 setopt promptsubst
 
-if [[ -n "$DISPLAY" || -n "$WAYLAND_DISPLAY" ]]; then
-  zinit snippet OMZT::agnoster
-else
-  zinit snippet OMZT::robbyrussell
+if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
+  AGNOSTER_CONTEXT_BG=red
 fi
+zinit snippet OMZT::agnoster
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
