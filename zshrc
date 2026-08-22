@@ -33,7 +33,7 @@ fi
 zinit snippet OMZL::git.zsh
 zinit snippet OMZT::agnoster
 
-zstyle ':completion:*' menu select
+zinit snippet OMZL::key-bindings.zsh
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always $realpath 2>/dev/null'
 
@@ -71,5 +71,5 @@ OCI_COMPLETION="$HOME/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli
 [[ -r "$OCI_COMPLETION" ]] && source "$OCI_COMPLETION"
 unset OCI_COMPLETION
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 source ~/.tokens.env
