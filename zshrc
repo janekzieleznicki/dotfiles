@@ -10,6 +10,14 @@ mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 autoload -Uz compinit
 compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
 
+# History
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt extended_history
+setopt append_history inc_append_history share_history
+setopt hist_ignore_space hist_ignore_all_dups hist_save_no_dups hist_find_no_dups
+
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
@@ -22,6 +30,7 @@ setopt promptsubst
 if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
   AGNOSTER_CONTEXT_BG=red
 fi
+zinit snippet OMZL::git.zsh
 zinit snippet OMZT::agnoster
 
 zstyle ':completion:*' menu select
@@ -39,7 +48,13 @@ if (( $+commands[opencode] )); then
 fi
 
 if (( $+commands[omp] )); then
-  eval "$(omp completions zsh)"
+  _omp_comp="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/omp-completions.zsh"
+  if [[ ! -s "$_omp_comp" || "${commands[omp]}" -nt "$_omp_comp" ]]; then
+    command mkdir -p "${_omp_comp:h}"
+    command omp completions zsh >| "$_omp_comp" 2>/dev/null
+  fi
+  [[ -s "$_omp_comp" ]] && source "$_omp_comp"
+  unset _omp_comp
 fi
 
 [[ -x "$HOME/.local/bin/balenaEtcher.AppImage" ]] && alias balenaEtcher="$HOME/.local/bin/balenaEtcher.AppImage"
@@ -57,3 +72,4 @@ OCI_COMPLETION="$HOME/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli
 unset OCI_COMPLETION
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/.tokens.env
