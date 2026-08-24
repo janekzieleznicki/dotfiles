@@ -72,4 +72,12 @@ OCI_COMPLETION="$HOME/.local/lib/oracle-cli/lib/python3.11/site-packages/oci_cli
 unset OCI_COMPLETION
 
 
-source ~/.tokens.env
+omp() {
+    if [[ -f ~/.tokens.env ]]; then
+        set -a
+        source ~/.tokens.env
+        set +a
+    fi
+
+    command omp "$@"
+}
