@@ -29,6 +29,9 @@
       ~/.fzf:
           path: modules/fzf
           create: true
+      ~/.config/btop/btop.conf:
+          path: mics/btop.conf
+          create: false
 - shell:
       - [git submodule update --init --recursive, Installing submodules]
       - [~/.fzf/install --key-bindings --completion --update-rc, Installing fzf]
