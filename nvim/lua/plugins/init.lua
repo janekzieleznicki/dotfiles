@@ -7,52 +7,20 @@ return {
     dependencies = {
       {
         "williamboman/mason.nvim",
+        lazy = false,
         opts = overrides.mason,
         config = function(_, opts)
           require("mason").setup(opts)
           require "configs.lspconfig"
         end,
       },
-      {
-        "williamboman/mason-lspconfig.nvim",
-        opts = {
-          ensure_installed = {
-            "lua_ls", "bashls", "clangd", "dockerls", "gopls", "jsonls",
-            "marksman", "terraformls", "yamlls", "ansiblels",
-          },
-          automatic_installation = false,
-        },
-        config = function(_, opts)
-          require("mason-lspconfig").setup(opts)
-        end,
-      },
+      { "williamboman/mason-lspconfig.nvim", lazy = false },
       "artemave/workspace-diagnostics.nvim",
       "jubnzv/virtual-types.nvim",
     },
     config = function()
       require "configs.lspconfig"
     end,
-  },
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    cmd = {
-      "MasonToolsInstall",
-      "MasonToolsInstallSync",
-      "MasonToolsInstall",
-      "MasonToolsUpdate",
-      "MasonToolsUpdateSync",
-      "MasonToolsClean",
-    },
-    dependencies = { "williamboman/mason.nvim" },
-    opts = {
-      ensure_installed = {
-        "lua-language-server", "gopls", "rust-analyzer", "clangd",
-        "stylua", "gofumpt", "goimports", "ruff", "prettier", "shfmt",
-        "codelldb", "delve",
-      },
-      auto_update = false,
-      run_on_start = false,
-    },
   },
   {
     "folke/which-key.nvim",
@@ -1158,11 +1126,5 @@ return {
       },
       show_success_message = true,
     },
-  },
-  {
-    "NvChad/base46",
-    build = function()
-      require("base46").compile()
-    end,
-  },
+}
 }

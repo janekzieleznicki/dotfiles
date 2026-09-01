@@ -34,14 +34,23 @@ require("lazy").setup({
     lazy = false,
     branch = "v2.5",
     import = "nvchad.plugins",
+    priority = 1000,
   },
 
   { import = "plugins" },
 }, lazy_config)
 
 -- load theme
-dofile(vim.g.base46_cache .. "defaults")
-dofile(vim.g.base46_cache .. "statusline")
+vim.schedule(function()
+  -- NvChad's base46 build hook writes the per-integration cache files
+  -- asynchronously during lazy's first run. Force the compile here so
+  -- dofile() below always has files to source on a fresh install.
+  pcall(function()
+    require("base46").load_all_highlights()
+  end)
+  pcall(vim.cmd, "dofile " .. vim.g.base46_cache .. "defaults")
+  pcall(vim.cmd, "dofile " .. vim.g.base46_cache .. "statusline")
+end)
 
 -- load options
 require "options"
