@@ -1159,4 +1159,10 @@ return {
       show_success_message = true,
     },
   },
+  {
+    "NvChad/base46",
+    build = function()
+      require("base46").compile()
+    end,
+  },
 }

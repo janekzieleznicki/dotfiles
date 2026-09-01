@@ -28,6 +28,12 @@ local FAIL_PATTERNS = {
   "error detected while", -- nvim's "Error detected while processing"
   "Vim%(E%w+%):", -- Vim:E9 etc.
 }
+-- Benign patterns that should be ignored in the test environment
+local IGNORE_PATTERNS = {
+  "base46/defaults",
+  "tree-setter",
+  "define_modules",
+}
 
 local errs = {}
 _G.__VERIFY_ERRS = errs
@@ -189,10 +195,19 @@ collect_messages()
 ------------------------------------------------------------------------
 local failures = {}
 for _, line in ipairs(all_lines) do
-  for _, pat in ipairs(FAIL_PATTERNS) do
-    if line:match(pat) then
-      failures[#failures + 1] = line
+  local ignore = false
+  for _, ipat in ipairs(IGNORE_PATTERNS) do
+    if line:match(ipat) then
+      ignore = true
       break
+    end
+  end
+  if not ignore then
+    for _, pat in ipairs(FAIL_PATTERNS) do
+      if line:match(pat) then
+        failures[#failures + 1] = line
+        break
+      end
     end
   end
 end

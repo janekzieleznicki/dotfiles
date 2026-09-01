@@ -81,3 +81,5 @@ omp() {
 
     command omp "$@"
 }
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
