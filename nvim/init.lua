@@ -2,7 +2,7 @@
 vim.g.base46_cache = vim.fn.stdpath("data") .. "/base46/"
 local config_dir = vim.fn.fnamemodify(vim.fn.expand('<sfile>'), ':h')
 vim.opt.runtimepath:prepend(config_dir)
-package.path = package.path .. ";" .. config_dir .. "/lua/?.lua;" .. config_dir .. "/lua/?/init.lua"
+vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- bootstrap lazy and all plugins

@@ -517,14 +517,15 @@ autocmd({ "InsertEnter", "WinLeave" }, {
   command = "set nocursorline",
 })
 
--- Disable the hardcoded VimEnter autocmd registered by mason-tool-installer.nvim.
--- The plugin unconditionally runs `run_on_start()` on VimEnter regardless of
--- opts.run_on_start, which races mason-registry hydration on a fresh install.
--- Removing the augroup after lazy finishes wiring the plugin prevents that
--- race. Users can still invoke :MasonToolsInstall explicitly.
+-- Prevent mason-tool-installer's hardcoded VimEnter race with NvChad's
+-- automatic Mason setup. Delete its augroup as soon as lazy finishes
+-- (all plugins loaded and initialized).
 vim.api.nvim_create_autocmd("User", {
   pattern = "LazyDone",
+  once = true,
   callback = function()
+    -- Delete mason-tool-installer's VimEnter augroup so it doesn't race
+    -- with NvChad's own Mason installation logic.
     pcall(vim.api.nvim_del_augroup_by_name, "mti_start")
   end,
 })
