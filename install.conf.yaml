@@ -30,8 +30,8 @@
           path: modules/fzf
           create: true
       ~/.config/btop/btop.conf:
-          path: mics/btop.conf
-          create: false
+          path: misc/btop.conf
+          create: true
 - shell:
       - [git submodule update --init --recursive, Installing submodules]
       - [~/.fzf/install --key-bindings --completion --update-rc, Installing fzf]
