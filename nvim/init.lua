@@ -4,7 +4,34 @@ local config_dir = vim.fn.fnamemodify(vim.fn.expand('<sfile>'), ':h')
 vim.opt.runtimepath:prepend(config_dir)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+-- Override markdown injections query BEFORE plugins load to avoid
+pcall(vim.treesitter.query.set, "markdown", "injections", [[
+(fenced_code_block
+  (info_string
+    (language) @injection.language)
+  (code_fence_content) @injection.content)
 
+((html_block) @injection.content
+  (#set! injection.language "html")
+  (#set! injection.combined)
+  (#set! injection.include-children))
+
+((minus_metadata) @injection.content
+  (#set! injection.language "yaml")
+  (#offset! @injection.content 1 0 -1 0)
+  (#set! injection.include-children))
+
+((plus_metadata) @injection.content
+  (#set! injection.language "toml")
+  (#offset! @injection.content 1 0 -1 0)
+  (#set! injection.include-children))
+
+([
+  (inline)
+  (pipe_table_cell)
+] @injection.content
+  (#set! injection.language "markdown_inline"))
+]])
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
@@ -39,6 +66,7 @@ require("lazy").setup({
 
   { import = "plugins" },
 }, lazy_config)
+
 
 -- load theme
 vim.schedule(function()

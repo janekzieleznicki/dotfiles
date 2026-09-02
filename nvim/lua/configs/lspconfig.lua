@@ -95,6 +95,7 @@ config("clangd", {
     "--completion-style=detailed",
     "--header-insertion=iwyu",
   },
+  filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
   capabilities = vim.tbl_deep_extend("force", capabilities, {
     offsetEncoding = { "utf-16" },
   }),

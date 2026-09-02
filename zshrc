@@ -30,6 +30,12 @@ setopt promptsubst
 if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
   AGNOSTER_CONTEXT_BG=red
 fi
+
+# Git prompt status symbols (normally provided by oh-my-zsh's lib/git.zsh).
+# Without these, parse_git_dirty() always returns empty and the agnoster
+# git segment never switches to dirty colors.
+ZSH_THEME_GIT_PROMPT_DIRTY="✘"
+ZSH_THEME_GIT_PROMPT_CLEAN=""
 zinit snippet OMZL::git.zsh
 zinit snippet OMZT::agnoster
 

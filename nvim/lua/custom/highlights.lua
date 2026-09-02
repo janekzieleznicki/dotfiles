@@ -6,7 +6,6 @@ M.override = {
   CursorLine = { bg = "black2" },
   Visual = { bg = "black2" },
   Comment = { italic = true },
-  NvDashAscii = { fg = "purple", bg = "none" },
   IndentBlanklineContextStart = { bg = "none" },
 
   LspInlayHint = { fg = "#4e5665", bg = "NONE" },
