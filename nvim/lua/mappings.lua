@@ -269,7 +269,9 @@ map("n", "[c", "<cmd>Gitsigns prev_hunk<CR>", { desc = "Previous hunk" })
 
 map({ "n" }, "<ESC>", function()
   vim.cmd "noh"
-  vim.cmd "Noice dismiss"
+  if vim.fn.exists ":Noice" == 2 then
+    vim.cmd "Noice dismiss"
+  end
 end, { desc = " Clear highlights" })
 
 map("n", "<leader>q", "<CMD>q<CR>", { desc = "󰗼 Close" })

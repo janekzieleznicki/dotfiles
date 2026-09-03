@@ -141,6 +141,13 @@ if ok_lazy and lazy and lazy.plugins then
 else
   load_errors[#load_errors + 1] = "lazy.nvim API unavailable"
 end
+-- ----------------------------------------------------------------------
+-- 3b. Drive the <ESC> mapping so VeryLazy-gated commands are exercised
+--     exactly as the user would on first keypress. Use `feedkeys` with
+--     `x!` (execute immediately, do not type) to make the keypress
+--     synchronous, so any E5108 surfaces before :messages is read.
+-- ----------------------------------------------------------------------
+vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, false, true), "x!", false)
 
 ------------------------------------------------------------------------
 -- 4. Open sample files to trigger BufReadPost + filetype plugins.
@@ -230,6 +237,19 @@ local total_plugins = 0
 if ok_lazy and lazy and lazy.plugins then
   total_plugins = #lazy.plugins()
 end
+
+-- ----------------------------------------------------------------------
+-- 7. Emit machine-parseable summary for TUI drivers.
+--     The line is a single JSON object, prefixed by "VERIFY_JSON: " so
+--     a driver can scan for it without ambiguity.
+-- ----------------------------------------------------------------------
+local summary = {
+  status = #failures > 0 and "fail" or "ok",
+  plugins = total_plugins,
+  loaded = loaded_count,
+  failures = failures,
+}
+print("VERIFY_JSON: " .. vim.fn.json_encode(summary))
 
 if #failures > 0 then
   print("VERIFY: FAIL (" .. #failures .. " error(s), " .. total_plugins .. " plugins, " .. loaded_count .. " loaded)")
